@@ -8,8 +8,7 @@ class Settings(BaseSettings):
     APP_DESCRIPTION: str
     APP_VERSION: str
     HF_TOKEN: str
-    COLAB_OLLAMA_URL: str 
-    OLLAMA_MODEL_ID: str
+    
     
     class Config:
         env_file = ".env"

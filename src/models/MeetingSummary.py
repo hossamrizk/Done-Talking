@@ -1,9 +1,8 @@
-from typing import List, Optional
-from pydantic import BaseModel
-
+from typing import List
+from pydantic import BaseModel, Field
 class MeetingSummary(BaseModel):
-    meeting_topic: str
-    key_speakers: List[str]  
-    key_decisions: List[str]  
-    action_items: List[str]   
-    discussion_highlights: List[str]
+    meeting_topic: str = Field(...)
+    key_speakers: List[str] = Field(...)
+    key_decisions: List[str] = Field(...)
+    action_items: List[str] = Field(...)
+    discussion_highlights: List[str] = Field(...)
