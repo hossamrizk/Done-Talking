@@ -50,7 +50,7 @@ class AudioDiarization:
             csv_path = csv_handler.save_to_csv(diarization, text_data, audio_file)
             print(f"Diarization results saved to CSV: {csv_path}")
         
-        return diarization, text_data
+        return diarization, text_data, csv_path
     
     def get_speaker_timeline(self, diarization_result):
         """

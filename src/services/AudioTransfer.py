@@ -47,6 +47,11 @@ class AudioTransfer:
 
         destination = self.uploaded_dir / file.filename
 
+        if destination.exists():
+            print(f"File already exists: {destination}")
+            return {"status": "success", "message": f"File {file.filename} already exists", "file_path": str(destination)}
+
+
         with open(destination, "wb") as buffer:
             buffer.write(file.file.read())
 
