@@ -7,4 +7,3 @@ class MeetingSummary(BaseModel):
     key_decisions: List[str]  
     action_items: List[str]   
     discussion_highlights: List[str]
-    unresolved_issues: Optional[List[str]] = None
