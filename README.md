@@ -12,9 +12,10 @@
 - If video: downloads and extracts audio.
 - Performs **speaker diarization** with `pyannote.audio` to separate voices.
 - Transcribes using **OpenAI Whisper** (locally).
-- Summarizes the transcript + extracts key points using **Ollama local models**.
-- All processing runs **locally**, except for the summary model hosted on **Colab GPU**.
-- Outputs a concise **.txt file** with the final summary.
+- Summarizes the transcript + extracts key points using **Crewai and Ollama local models**.
+- All processing runs **locally**.
+- Outputs a concise **.json file** with the final summary.
+- Convert text summary into audio using **edge_tts**.
 
 ---
 
@@ -24,10 +25,10 @@
 - ✅ Local audio file support (`.mp3`, `.wav`, etc.)
 - ✅ Multi-speaker diarization via `pyannote.audio`
 - ✅ Whisper-based transcription
-- ✅ Summarization using Ollama-hosted LLMs (e.g., Mistral, LLaMA 3)
+- ✅ Summarization using Crewai and Ollama LLMs.
 - ✅ Key points extraction
-- ✅ Offline-first, with remote LLM support via Colab
-- ✅ Final output saved as `.txt`
+- ✅ Final output saved as `.json`
+- ✅ Convert summary into audio using `edge_tts`
 
 ---
 
@@ -50,9 +51,9 @@ The project includes three REST API endpoints:
 | Audio/Video Handling | `moviepy`, `ffmpeg`     |
 | Diarization         | `pyannote.audio`         |
 | Transcription       | `whisper`                |
-| Summarization       | `ollama` (hosted on Colab) |
-| API Server          | `Flask`                  |
-| File I/O            | `os`, `tempfile`, `shutil`, `pathlib` |
+| Summarization       | `Crewai with ollama` (Locally) |
+| Endpoints           | `FastAPI`                  |
+| File I/O            | `os`, `tempfile`, `shutil`|
 
 ---
 
@@ -65,30 +66,38 @@ done-talking/
 │   ├── assets/
 │   │   ├── generated_reports/
 │   │   ├── downloaded_audios/
+│   │   ├── diarization_output/            
 │   │   └── uploaded_audios/
 │   │
 │   ├── helpers/
-│   │   └── file_helpers.py
+│   │   └── config.py
+│   │   └── load_csv.py
+│   │   └── load_json.py
 │   │
 │   ├── models/
-│   │   └── ollama_model.py
+│   │   └── DownloadRequest.py
+│   │   └── MeetingSummary.py
 │   │
 │   ├── routes/
-│   │   └── api_routes.py
+│   │   └─  downloaded_audios_router.py
+│   │   └── home.py
+│   │   └── uploaded_audios_router.py
 │   │
 │   ├── services/
-│   │   ├── download_video.py
-│   │   ├── diarize.py
-│   │   ├── transcribe.py
-│   │   └── summarize.py
+│   │   ├── AudioDiarization.py
+│   │   ├── AudioTranscription.py
+│   │   ├── AudioTransfer.py
+│   │   ├── SummarizationAgent.py
+│   │   ├── TTS.py
+│   │   └── CSVHandler.py
 │   │
 │   ├── .env
+│   ├── .env.example
 │   ├── requirements.txt
 │   └── main.py
 │
 ├── LICENSE
 ├── README.md
-└── colab_server.ipynb
 ```
 
 ## 🧪 How to Run

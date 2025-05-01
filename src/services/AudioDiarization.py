@@ -1,24 +1,26 @@
 from pyannote.audio import Pipeline
 from services.CSVHandler import CSVHandler  
 from services.AudioTranscription import AudioTranscription
+from services.BaseService import BaseService
 from helpers.config import get_settings
 import os
 import torch
 
-class AudioDiarization:
-    def __init__(self, output_path: str = "assets/diarization_output"):
-        # Check if GPU is available
+class AudioDiarization(BaseService):
+    def __init__(self):
+        super().__init__()
+
+        self.output_path = self.diarization_output_path 
+
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"Using device: {self.device}")  
         
         # Load the pipeline and move it to the appropriate device
         self.pipeline = Pipeline.from_pretrained(
             "pyannote/speaker-diarization", 
             use_auth_token=get_settings().HF_TOKEN
         ).to(self.device)
-        
-        self.output_path = output_path
-        os.makedirs(self.output_path, exist_ok=True)
-        print(f"Using device: {self.device}")  # Optional: print which device is being used
+         
 
     def diarize(self, audio_file: str, save_csv: bool = True):
         """
