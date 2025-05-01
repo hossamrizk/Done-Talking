@@ -66,6 +66,7 @@ done-talking/
 │   ├── assets/
 │   │   ├── generated_reports/
 │   │   ├── downloaded_audios/
+│   │   ├── logs/
 │   │   ├── diarization_output/            
 │   │   └── uploaded_audios/
 │   │
@@ -84,6 +85,7 @@ done-talking/
 │   │   └── uploaded_audios_router.py
 │   │
 │   ├── services/
+│   │   ├── BaseService.py
 │   │   ├── AudioDiarization.py
 │   │   ├── AudioTranscription.py
 │   │   ├── AudioTransfer.py
@@ -105,7 +107,7 @@ done-talking/
 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/done-talking.git
+git clone https://github.com/hossamrizk/done-talking.git
 cd done-talking
 ```
 
@@ -133,4 +135,4 @@ Multi-speaker content analyzer
 
 ## 📜 License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the Apache License. See the `LICENSE` file for details.
