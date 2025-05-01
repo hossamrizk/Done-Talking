@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from services import AudioTransfer, SummarizationAgent, AudioDiarization, TTS
 from models import DownloadRequest
 from helpers import load_csv, load_json
-
+import os
 download_audio_router = APIRouter()
 
 @download_audio_router.post("/download_audio")
@@ -28,8 +28,14 @@ async def download_audio(request: DownloadRequest):
         result = sg.run_summarization_crew(speakers=speakers, text=text)
         
         # Get text data
-        meeting_topic, key_speakers, key_decisions, action_items, discussion_highlights = load_json(json_path = "/home/aitech/ssd/Done-Talking/src/assets/generated_reports/summarized_report.json") 
+        json_path = os.path.join(sg.output_path, "summarized_report.json")
+        
+        # Check if the file was created
+        if not os.path.exists(json_path):
+            raise HTTPException(status_code=500, detail="File is not existing")
 
+        # Get text data
+        meeting_topic, key_speakers, key_decisions, action_items, discussion_highlights = load_json(json_path)
         text = f"""
             Metting Topic is: {meeting_topic},
             key Speakers are: {key_speakers},
