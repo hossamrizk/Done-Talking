@@ -62,6 +62,9 @@ The project includes three REST API endpoints:
 ```bash
 done-talking/
 │
+├── docker/
+│   ├── docker-compose.yaml
+│   ├── Dockerfile
 ├── src/
 │   ├── assets/
 │   │   ├── generated_reports/

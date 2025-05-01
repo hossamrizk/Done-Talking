@@ -10,3 +10,5 @@ openai-whisper==20240930
 yt_dlp==2024.12.6
 crewai==0.114.0
 edge_tts==7.0.1
+path==17.1.0
+python-multipart==0.0.19
