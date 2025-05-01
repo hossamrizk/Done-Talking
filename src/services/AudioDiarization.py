@@ -3,19 +3,19 @@ from services.CSVHandler import CSVHandler
 from services.AudioTranscription import AudioTranscription
 from services.BaseService import BaseService
 from helpers.config import get_settings
-import os
+from pathlib import Path
 import torch
 
 class AudioDiarization(BaseService):
     def __init__(self):
         super().__init__()
 
-        self.output_path = self.diarization_output_path 
+        self.output_path = Path(self.diarization_output_path) 
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.logger.info(f"Using device: {self.device}")  
         print(f"Using device: {self.device}")  
         
-        # Load the pipeline and move it to the appropriate device
         self.pipeline = Pipeline.from_pretrained(
             "pyannote/speaker-diarization", 
             use_auth_token=get_settings().HF_TOKEN
@@ -30,13 +30,15 @@ class AudioDiarization(BaseService):
         :param save_csv: Whether to save the results to a CSV file.
         :return: Diarization result and transcript.
         """
-        # 1. Perform diarization
+
+        self.logger.info(f"Starting diarization for {audio_file}")
+
         diarization = self.pipeline(audio_file)
+        self.logger.info(f"Diarization completed for {audio_file}")
         
-        # 2. Initialize the transcription class
         transcriber = AudioTranscription(audio_file)
-        
-        # 3. Build the transcript with timestamps
+        self.logger.info(f"Transcriber initialized for {audio_file}")
+
         text_data = []
         for turn, _, speaker in diarization.itertracks(yield_label=True):
             audio_segment = transcriber.extract_segments(turn.start, turn.end)
@@ -50,6 +52,7 @@ class AudioDiarization(BaseService):
         if save_csv:
             csv_handler = CSVHandler(output_path=self.output_path)
             csv_path = csv_handler.save_to_csv(diarization, text_data, audio_file)
+            self.logger.info(f"Diarization results saved to CSV: {csv_path}")
             print(f"Diarization results saved to CSV: {csv_path}")
         
         return diarization, text_data, csv_path

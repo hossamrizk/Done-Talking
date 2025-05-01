@@ -11,4 +11,3 @@ def load_json(json_path: str):
     discussion_highlights = data["discussion_highlights"]
 
     return meeting_topic, key_speakers, key_decisions, action_items, discussion_highlights
-

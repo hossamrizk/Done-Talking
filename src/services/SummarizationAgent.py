@@ -1,13 +1,32 @@
 from crewai import Agent, Task, LLM, Process, Crew
 from textwrap import dedent
+from services.BaseService import BaseService
 from models import MeetingSummary
 import os
+import json
 
-class SummarizationAgent:
-    def __init__(self, model: LLM = LLM(model="ollama/gemma2:9b", temperature=0.6, base_url="http://localhost:11434")):
-        self.output_path = ("assets/generated_reports")
-        os.makedirs(self.output_path, exist_ok=True)
-        self.model = model
+class SummarizationAgent(BaseService):
+    def __init__(self, model: LLM = None):
+        super().__init__()
+        
+        self.output_path = self.generated_reports_path
+        self.report_filename = "summarized_report.json"
+        
+        self.target_path = os.path.join(self.output_path, self.report_filename)
+        
+        self.temp_filename = self.report_filename
+        
+        self.logger.info(f"Target path for final output: {self.target_path}")
+
+        if model is None:
+            self.model = LLM(
+                model="ollama/gemma2:9b", 
+                temperature=0.6, 
+                base_url="http://localhost:11434"
+            )
+        else:
+            self.model = model
+        self.logger.info("SummarizationAgent initialized")
 
     def summarization_agent(self):
         return Agent(
@@ -23,9 +42,9 @@ class SummarizationAgent:
             verbose=True
         )
 
-    def summarization_task(self):
+    def summarization_task(self, speakers, text):
         return Task(
-            description=dedent("""
+            description=dedent(f"""
                 You are provided with two lists:
                 - speakers: {speakers}
                 - corresponding text: {text}
@@ -34,22 +53,87 @@ class SummarizationAgent:
                 1. Write a clear, structured summary of the meeting.
                 2. Identify which speaker talked the most (by number of utterances).
                 3. Highlight their main contributions separately.
+                
+                IMPORTANT: Your response must be a valid JSON object EXACTLY matching this format:
+                {{
+                    "meeting_topic": "brief topic description",
+                    "key_speakers": ["speaker1", "speaker2"],
+                    "key_decisions": ["decision1", "decision2"],
+                    "action_items": ["action1", "action2"],
+                    "discussion_highlights": ["highlight1", "highlight2"]
+                }}
+                
+                Do not include any additional text, markdown formatting, or explanation outside of this JSON structure.
             """),
-            expected_output="A JSON object containing the meeting summary.",
+            expected_output="A valid JSON object containing the meeting summary that strictly follows the MeetingSummary model format.",
             output_json=MeetingSummary,
-            output_file=os.path.join(self.output_path, "summarized_report.json"),
+            output_file=self.temp_filename,  
             agent=self.summarization_agent()
         )
     
-    def summarization_crew(self):
+    def summarization_crew(self, speakers, text):
         return Crew(
-            agents = [self.summarization_agent()],
-            tasks = [self.summarization_task()],
-            process = Process.sequential,
+            agents=[self.summarization_agent()],
+            tasks=[self.summarization_task(speakers, text)],
+            process=Process.sequential,
             verbose=True
         )
     
     def run_summarization_crew(self, speakers: list, text: list):
-        crew_instance = self.summarization_crew()
-        result = crew_instance.kickoff(inputs={"speakers": speakers, "text": text})
-        return result
+        try:
+            self.logger.info("Starting summarization crew")
+            self.logger.info(f"Using temporary filename: {self.temp_filename}")
+            self.logger.info(f"Final target path: {self.target_path}")
+            
+            cwd = os.getcwd()
+            self.logger.info(f"Current working directory: {cwd}")
+            
+            temp_file_path = os.path.join(cwd, self.temp_filename)
+            self.logger.info(f"Expected temporary file path: {temp_file_path}")
+            
+            crew_instance = self.summarization_crew(speakers, text)
+            result = crew_instance.kickoff()
+            
+            if os.path.exists(temp_file_path):
+                self.logger.info(f"Temporary file found at: {temp_file_path}")
+
+                os.makedirs(os.path.dirname(self.target_path), exist_ok=True)
+                
+                with open(temp_file_path, 'r') as f:
+                    data = json.load(f)
+                
+                with open(self.target_path, 'w') as f:
+                    json.dump(data, f, indent=2)
+                
+                self.logger.info(f"Successfully copied file to target path: {self.target_path}")
+                
+                os.remove(temp_file_path)
+                self.logger.info(f"Removed temporary file: {temp_file_path}")
+            else:
+                self.logger.warning(f"Temporary file not found at expected location: {temp_file_path}")
+
+                for root, dirs, files in os.walk(cwd):
+                    if self.temp_filename in files:
+                        found_path = os.path.join(root, self.temp_filename)
+                        self.logger.info(f"Found file at: {found_path}")
+                        
+                        with open(found_path, 'r') as f:
+                            data = json.load(f)
+                        
+                        os.makedirs(os.path.dirname(self.target_path), exist_ok=True)
+                        
+                        with open(self.target_path, 'w') as f:
+                            json.dump(data, f, indent=2)
+                        
+                        self.logger.info(f"Successfully copied file to target path: {self.target_path}")
+                        
+                        os.remove(found_path)
+                        self.logger.info(f"Removed temporary file: {found_path}")
+                        break
+            
+            self.logger.info("Summarization completed successfully")
+            print(result)
+            return result
+        except Exception as e:
+            self.logger.error(f"Summarization failed: {str(e)}")
+            raise

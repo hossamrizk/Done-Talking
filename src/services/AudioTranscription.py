@@ -1,14 +1,19 @@
+from services.BaseService import BaseService
 from pydub import AudioSegment
 import tempfile
 import whisper
 import os
 
-class AudioTranscription:
+class AudioTranscription(BaseService):
     def __init__(self, audio_path, transcribe_model: str = "base"):
+        super().__init__()
+
         self.audio_path = audio_path
         self.transcribe_model = whisper.load_model(transcribe_model)
+        self.logger.info(f"Transcription model {transcribe_model} loaded.")
     
     def extract_segments(self, start_time, end_time):
+
         """
         Extract segments from the audio file.
         
@@ -28,7 +33,6 @@ class AudioTranscription:
         """
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             audio_segment.export(f.name, format="wav")
-            # Assuming you have a function `transcribe_audio` to transcribe the audio
             result = self.transcribe_model.transcribe(f.name)
         os.remove(f.name)
         return result['text']

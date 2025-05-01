@@ -1,11 +1,13 @@
+from services.BaseService import BaseService
 import edge_tts
-
-class TTS:
+import os
+class TTS(BaseService):
     def __init__(self, voice: str = "en-GB-RyanNeural"):
+        super().__init__()
         self.voice = voice
 
     async def convert_text_to_speech(self, text: str):
         communicate = edge_tts.Communicate(text, self.voice)
-        await communicate.save("/home/aitech/ssd/Done-Talking/src/assets/voice/output.mp3")
+        await communicate.save(os.path.join(self.generated_audios_path, "output.mp3"))
 
 
