@@ -6,13 +6,10 @@ class BaseService:
     def __init__(self):
         self.app_settings = get_settings()
 
-        # Get the absolute path to the services directory
         services_dir = os.path.dirname(os.path.abspath(__file__))
         
-        # Project root is one level up from services directory
         project_root = os.path.dirname(services_dir)
         
-        # Assets directory is in the project root
         self.base_dir = os.path.join(project_root, "assets")
         self.logger = logging.getLogger(__name__)
         self.setup_logging()

@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  app:
+    container_name: done-talking
+    image: hossamrizk/done-talking
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: Dockerfile
