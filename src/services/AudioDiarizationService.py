@@ -1,12 +1,12 @@
 from pyannote.audio import Pipeline
-from services.CSVHandler import CSVHandler  
-from services.AudioTranscription import AudioTranscription
-from services.BaseService import BaseService
+from .CSVHandlerService import CSVHandler  
+from .AudioTranscriptionService import AudioTranscription
+from .BaseService import BaseService
 from helpers.config import get_settings
 from pathlib import Path
 import torch
 
-class AudioDiarization(BaseService):
+class AudioDiarizationService(BaseService):
     def __init__(self):
         super().__init__()
 

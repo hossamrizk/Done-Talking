@@ -1,11 +1,11 @@
-from services.BaseService import BaseService
+from .BaseService import BaseService
 from yt_dlp import YoutubeDL
 from pathlib import Path
 from fastapi import UploadFile, HTTPException
 import os
 
 
-class AudioTransfer(BaseService):
+class AudioTransferService(BaseService):
     def __init__(self):
         super().__init__()
         self.download_dir = Path(self.downloaded_audios_path)

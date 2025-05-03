@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from services import AudioTransfer, SummarizationAgent, AudioDiarization, TTS
+from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService
 from models import DownloadRequest
 from helpers import load_csv, load_json
 import os
@@ -9,22 +9,19 @@ download_audio_router = APIRouter()
 async def download_audio(request: DownloadRequest):
     try:
         video_url = request.video_url
-        at = AudioTransfer()
+        at = AudioTransferService()
         downloaded_file_path = at.download_audio(video_url=video_url)
         
         # Running Diralization
-        ad = AudioDiarization()
+        ad = AudioDiarizationService()
         
         _, _, csv_path = ad.diarize(audio_file=downloaded_file_path)
 
         # Load csv file
         speakers, text = load_csv(csv_path=csv_path)
 
-        audio_summaryization = SummarizationAgent()
-        summary = audio_summaryization.summarization(text)
-
         # Summarization
-        sg = SummarizationAgent()
+        sg = SummarizationService()
         result = sg.run_summarization_crew(speakers=speakers, text=text)
         
         # Get text data
@@ -44,7 +41,7 @@ async def download_audio(request: DownloadRequest):
             Discussion Highlights are: {discussion_highlights}
         """
         # TTS
-        tts = TTS()
+        tts = TTSService()
         await tts.convert_text_to_speech(text)
 
         return {"A summarized audio saved successfully"}

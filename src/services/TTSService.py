@@ -1,7 +1,7 @@
-from services.BaseService import BaseService
+from .BaseService import BaseService
 import edge_tts
 import os
-class TTS(BaseService):
+class TTSService(BaseService):
     def __init__(self, voice: str = "en-GB-RyanNeural"):
         super().__init__()
         self.voice = voice

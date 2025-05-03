@@ -12,3 +12,6 @@ crewai==0.114.0
 edge_tts==7.0.1
 path==17.1.0
 python-multipart==0.0.19
+nltk==3.9.1
+wordcloud==1.9.4
+matplotlib==3.9.2

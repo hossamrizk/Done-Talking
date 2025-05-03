@@ -1,10 +1,10 @@
-from services.BaseService import BaseService
+from .BaseService import BaseService
 from pydub import AudioSegment
 import tempfile
 import whisper
 import os
 
-class AudioTranscription(BaseService):
+class AudioTranscriptionService(BaseService):
     def __init__(self, audio_path, transcribe_model: str = "base"):
         super().__init__()
 

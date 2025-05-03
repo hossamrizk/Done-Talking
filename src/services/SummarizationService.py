@@ -5,7 +5,7 @@ from models import MeetingSummary
 import os
 import json
 
-class SummarizationAgent(BaseService):
+class SummarizationService(BaseService):
     def __init__(self, model: LLM = None):
         super().__init__()
         

@@ -1,10 +1,10 @@
-from services.BaseService import BaseService
+from .BaseService import BaseService
 from datetime import datetime
 from path import Path
 import pandas as pd
 import os
 
-class CSVHandler(BaseService):
+class CSVHandlerService(BaseService):
     def __init__(self, output_path: Path):
         super().__init__()
         self.output_path = Path(self.diarization_output_path)

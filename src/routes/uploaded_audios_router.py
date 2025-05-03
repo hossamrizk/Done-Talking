@@ -1,8 +1,5 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
-from services.AudioTransfer import AudioTransfer
-from services.AudioDiarization import AudioDiarization
-from services.SummarizationAgent import SummarizationAgent
-from services.TTS import TTS
+from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService
 from helpers import load_csv, load_json
 import os
 
@@ -12,7 +9,7 @@ upload_audio_router = APIRouter()
 async def upload_audio(audio: UploadFile = File(...)):
     try:
         # Upload and process audio
-        at = AudioTransfer()
+        at = AudioTransferService()
         result = at.upload_audio(file=audio)
         
         if result["status"] == "success" and "file_path" in result:
@@ -21,14 +18,14 @@ async def upload_audio(audio: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="Failed to upload audio")
 
         # Run diarization
-        ad = AudioDiarization()
+        ad = AudioDiarizationService()
         _, _, csv_path = ad.diarize(audio_file=uploaded_file_path)
         
         # Load csv file
         speakers, text = load_csv(csv_path=csv_path)
 
         # Summarization
-        sg = SummarizationAgent()
+        sg = SummarizationService()
         result = sg.run_summarization_crew(speakers=speakers, text=text)
         
         # Determine the path to the JSON file
@@ -50,7 +47,7 @@ async def upload_audio(audio: UploadFile = File(...)):
         """
         
         # TTS
-        tts = TTS()
+        tts = TTSService()
         audio_path = await tts.convert_text_to_speech(text)
 
         return {
