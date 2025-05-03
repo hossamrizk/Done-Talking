@@ -138,4 +138,6 @@ Multi-speaker content analyzer
 
 ## 📜 License
 
-This project is licensed under the Apache License. See the `LICENSE` file for details.
+This project is proprietary and all rights are reserved by `Hossam Eldein Rizk`. Unauthorized copying or distribution is prohibited. See the LICENSE file for full terms.
+
+
