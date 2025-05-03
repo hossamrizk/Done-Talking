@@ -17,7 +17,7 @@ class AnalysisService(BaseService):
         stopwords_provider = StopwordsService()
         
         self.df = loader.get_data()
-        self.text_analyzer = TextAnalyzerService(self.df, stopwords_provider.get_stopwords())
+        self.text_analyzer = TextAnalyzerService(self.df, stopwords_provider.get())
         self.speaker_analyzer = SpeakerAnalyzerService(self.df)
         self.logger.info("AnalysisService initialized with CSV data.")
 

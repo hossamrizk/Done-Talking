@@ -14,4 +14,6 @@ path==17.1.0
 python-multipart==0.0.19
 nltk==3.9.1
 wordcloud==1.9.4
-matplotlib==3.9.2
+matplotlib==3.10.1
+scikit-learn==1.6.1
+inflect==7.5.0

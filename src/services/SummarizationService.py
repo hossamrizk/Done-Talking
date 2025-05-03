@@ -54,15 +54,6 @@ class SummarizationService(BaseService):
                 2. Identify which speaker talked the most (by number of utterances).
                 3. Highlight their main contributions separately.
                 
-                IMPORTANT: Your response must be a valid JSON object EXACTLY matching this format:
-                {{
-                    "meeting_topic": "brief topic description",
-                    "key_speakers": ["speaker1", "speaker2"],
-                    "key_decisions": ["decision1", "decision2"],
-                    "action_items": ["action1", "action2"],
-                    "discussion_highlights": ["highlight1", "highlight2"]
-                }}
-                
                 Do not include any additional text, markdown formatting, or explanation outside of this JSON structure.
             """),
             expected_output="A valid JSON object containing the meeting summary that strictly follows the MeetingSummary model format.",

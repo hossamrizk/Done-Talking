@@ -1,6 +1,6 @@
 from pyannote.audio import Pipeline
-from .CSVHandlerService import CSVHandler  
-from .AudioTranscriptionService import AudioTranscription
+from .CSVHandlerService import CSVHandlerService
+from .AudioTranscriptionService import AudioTranscriptionService
 from .BaseService import BaseService
 from helpers.config import get_settings
 from pathlib import Path
@@ -36,7 +36,7 @@ class AudioDiarizationService(BaseService):
         diarization = self.pipeline(audio_file)
         self.logger.info(f"Diarization completed for {audio_file}")
         
-        transcriber = AudioTranscription(audio_file)
+        transcriber = AudioTranscriptionService(audio_file)
         self.logger.info(f"Transcriber initialized for {audio_file}")
 
         text_data = []
@@ -50,7 +50,7 @@ class AudioDiarizationService(BaseService):
             })
         
         if save_csv:
-            csv_handler = CSVHandler(output_path=self.output_path)
+            csv_handler = CSVHandlerService(output_path=self.output_path)
             csv_path = csv_handler.save_to_csv(diarization, text_data, audio_file)
             self.logger.info(f"Diarization results saved to CSV: {csv_path}")
             print(f"Diarization results saved to CSV: {csv_path}")

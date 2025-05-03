@@ -27,12 +27,13 @@ class SpeakerAnalyzerService(BaseService):
         self.logger.info(f"Getting the top {n} most talked speakers.")
         return self.df['speaker'].value_counts().head(n).index.tolist()
     
-    def get_total_duration(self) -> Dict[str, float]:
+    def get_total_duration(self) -> Dict[str, int]:
         """
-        Get the total duration of each speaker.
+        Get the total duration of each speaker as integers.
         
         Returns:
-            Dict[str, float]: Dictionary with speakers as keys and their total duration as values.
+            Dict[str, int]: Dictionary with speakers as keys and their total duration (int) as values.
         """
         self.logger.info("Calculating total duration for each speaker.")
-        return self.df.groupby('speaker')['duration'].sum().to_dict()
+        total_duration = self.df.groupby('speaker')['duration'].sum().to_dict()
+        return {speaker: int(duration) for speaker, duration in total_duration.items()}
