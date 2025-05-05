@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService, AnalysisService
 from helpers import load_csv, load_json, format_analized_data
 import os
@@ -24,6 +25,7 @@ async def upload_audio(audio: UploadFile = File(...)):
         most_talked_speakers = analysis_service.get_most_talked_speakers(top_n=2)
         total_duration = analysis_service.get_total_duration_for_each_speaker()
         most_used_word = analysis_service.get_most_used_word()
+        total_speakers = analysis_service.get_total_number_of_speakers()
         data = {
             "most_talked_speakers": most_talked_speakers,
             "total_duration": total_duration,
@@ -47,21 +49,11 @@ async def upload_audio(audio: UploadFile = File(...)):
             raise HTTPException(status_code=500, detail="File is not existing")
 
         # Get text data
-        #meeting_topic, key_speakers, key_decisions, action_items, discussion_highlights = load_json(json_path)
-
-        #text = f"""
-            #Meeting Topic is: {meeting_topic},
-            #Key Speakers are: {', '.join(key_speakers)},
-            #Key Decisions are: {', '.join(key_decisions)},
-            #Action Items are: {', '.join(action_items)},
-            #Discussion Highlights are: {', '.join(discussion_highlights)}
-        #"""
-        # Get text data
         meeting_topic, summary = load_json(json_path)
 
         text = f"""
             Meeting Topic is: {meeting_topic},
-            This is some analysis of this audio: {formatted_data},
+            This is some analysis of this audio: The total number of speakers is {total_speakers}, {formatted_data},
             Metting Summary is: {summary}
         """
         
@@ -69,11 +61,13 @@ async def upload_audio(audio: UploadFile = File(...)):
         tts = TTSService()
         audio_path = await tts.convert_text_to_speech(text)
         
-        return {
-            "status": "success", 
-            "message": "Meeting summarized successfully", 
-            "audio_path": audio_path
-        }
+        if not os.path.exists(audio_path):
+            raise HTTPException(status_code=500, detail="Audio file not found")
+
+        return FileResponse(
+            audio_path,
+            media_type="audio/mpeg"
+        )
         
     except Exception as e:
         print(f"Error: {str(e)}")

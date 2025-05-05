@@ -32,3 +32,6 @@ class AnalysisService(BaseService):
     
     def get_most_used_word(self):
         return self.text_analyzer.get_most_used_word()
+    
+    def get_total_number_of_speakers(self):
+        return self.speaker_analyzer.get_total_number_of_speakers()

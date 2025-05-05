@@ -37,3 +37,13 @@ class SpeakerAnalyzerService(BaseService):
         self.logger.info("Calculating total duration for each speaker.")
         total_duration = self.df.groupby('speaker')['duration'].sum().to_dict()
         return {speaker: int(duration) for speaker, duration in total_duration.items()}
+    
+    def get_total_number_of_speakers(self) -> int:
+        """
+        Get the total number of unique speakers.
+        
+        Returns:
+            int: Total number of unique speakers
+        """
+        self.logger.info("Calculating total number of unique speakers")
+        return self.df['speaker'].unique().size
