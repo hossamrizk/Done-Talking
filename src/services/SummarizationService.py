@@ -20,8 +20,8 @@ class SummarizationService(BaseService):
 
         if model is None:
             self.model = LLM(
-                model="ollama/gemma2:9b", 
-                temperature=0.6, 
+                model="ollama/deepseek-r1:8b", 
+                temperature=0, 
                 base_url="http://localhost:11434"
             )
         else:
