@@ -1,6 +1,7 @@
 from .BaseService import BaseService
 from typing import List, Dict
 import pandas as pd 
+from langdetect import detect
 
 class SpeakerAnalyzerService(BaseService):
     def __init__(self, df: pd.DataFrame):
@@ -47,3 +48,14 @@ class SpeakerAnalyzerService(BaseService):
         """
         self.logger.info("Calculating total number of unique speakers")
         return self.df['speaker'].unique().size
+
+    def get_text_language(self) -> str:
+        """
+        Detect the language of the text in the DataFrame.
+        
+        Returns:
+            str: Detected language code (e.g., 'en' for English).
+        """
+        self.logger.info("Detecting language of the text.")
+        text = str(self.df['text'].iloc[0])
+        return detect(text)
