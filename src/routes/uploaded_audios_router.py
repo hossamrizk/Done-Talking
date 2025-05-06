@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
-from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService, AnalysisService
+from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService, AnalysisService, LangchainSummary
 from helpers import load_csv, load_json, format_analized_data
 import os
 
@@ -38,12 +38,14 @@ async def upload_audio(audio: UploadFile = File(...)):
         speakers, text = load_csv(csv_path=csv_path)
 
         # Summarization
-        sg = SummarizationService()
-        result = sg.run_summarization_crew(speakers=speakers, text=text)
+        #sg = SummarizationService()
+        #result = sg.run_summarization_crew(speakers=speakers, text=text)
         
         # Determine the path to the JSON file
-        json_path = os.path.join(sg.output_path, "summarized_report.json")
-        
+        #json_path = os.path.join(sg.output_path, "summarized_report.json")
+        ls = LangchainSummary()
+        json_path = ls.summarize(text=text)
+
         # Check if the file was created
         if not os.path.exists(json_path):
             raise HTTPException(status_code=500, detail="File is not existing")
