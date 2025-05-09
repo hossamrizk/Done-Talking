@@ -2,6 +2,7 @@ from langchain_ollama import OllamaLLM
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
 from .BaseService import BaseService
+from helpers import unique_file_name
 from models import MeetingSummary
 import json
 import os
@@ -12,7 +13,8 @@ class LangchainSummary(BaseService):
         self.llm = OllamaLLM(model=model, temperature=temperature)
         self.parser = PydanticOutputParser(pydantic_object=MeetingSummary)
         self.output_path = self.generated_reports_path
-        self.output_filename = os.path.join(self.output_path, "summarized_report.json")
+        filename = unique_file_name(file_extension="json")
+        self.output_filename = os.path.join(self.output_path, filename)
 
     def get_prompt_template(self) -> PromptTemplate:
         return PromptTemplate(
