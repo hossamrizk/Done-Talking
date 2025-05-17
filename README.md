@@ -64,45 +64,103 @@ done-talking/
 │
 ├── docker/
 │   ├── docker-compose.yaml
-│   ├── Dockerfile
+│   └── Dockerfile
+│
 ├── src/
 │   ├── assets/
-│   │   ├── generated_reports/
 │   │   ├── downloaded_audios/
+│   │   ├── diarization_output/
+│   │   ├── generated_reports/
 │   │   ├── logs/
-│   │   ├── diarization_output/            
 │   │   └── uploaded_audios/
 │   │
 │   ├── helpers/
-│   │   └── config.py
-│   │   └── load_csv.py
-│   │   └── load_json.py
+│   │   ├── config.py
+│   │   ├── load_csv.py
+│   │   ├── load_json.py
+│   │   └── __init__.py
 │   │
 │   ├── models/
-│   │   └── DownloadRequest.py
-│   │   └── MeetingSummary.py
+│   │   ├── DownloadRequest.py
+│   │   ├── MeetingSummary.py
+│   │   └── __init__.py
 │   │
 │   ├── routes/
-│   │   └─  downloaded_audios_router.py
-│   │   └── home.py
-│   │   └── uploaded_audios_router.py
+│   │   ├── downloaded_audios_router.py
+│   │   ├── home.py
+│   │   ├── uploaded_audios_router.py
+│   │   └── __init__.py
 │   │
 │   ├── services/
 │   │   ├── BaseService.py
-│   │   ├── AudioDiarization.py
-│   │   ├── AudioTranscription.py
-│   │   ├── AudioTransfer.py
-│   │   ├── SummarizationAgent.py
-│   │   ├── TTS.py
-│   │   └── CSVHandler.py
+│   │   └── __init__.py
 │   │
+│   │   ├── analysis/
+│   │   │   ├── AnalysisService.py
+│   │   │   ├── DataLoader.py
+│   │   │   ├── SpeakerAnalyzer.py
+│   │   │   ├── TextAnalyzer.py
+│   │   │   ├── __init__.py
+│   │   │   └── stopwords/
+│   │   │       ├── AbstractStopWords.py
+│   │   │       ├── ArabicStopWords.py
+│   │   │       ├── EnglishStopWords.py
+│   │   │       └── __init__.py
+│   │
+│   │   ├── diarization/
+│   │   │   ├── AudioDiarization.py
+│   │   │   ├── CsvHandler.py
+│   │   │   └── __init__.py
+│   │
+│   │   ├── file_transfer/
+│   │   │   ├── AbstractAudioHandler.py
+│   │   │   ├── DownloadAudio.py
+│   │   │   ├── UploadAudio.py
+│   │   │   └── __init__.py
+│   │
+│   │   ├── formatters/
+│   │   │   ├── AbstractFormatter.py
+│   │   │   ├── ArabicFormatter.py
+│   │   │   ├── EnglishFormatter.py
+│   │   │   └── __init__.py
+│   │
+│   │   ├── llm/
+│   │   │   ├── __init__.py
+│   │   │   ├── prompts/
+│   │   │   │   ├── BasePrompt.py
+│   │   │   │   ├── ArabicPrompt.py
+│   │   │   │   ├── EnglishPrompt.py
+│   │   │   │   └── __init__.py
+│   │   │   └── providers/
+│   │   │       ├── BaseLLMProvider.py
+│   │   │       ├── GoogleProvider.py
+│   │   │       ├── OllamaProvider.py
+│   │   │       └── __init__.py
+│   │
+│   │   ├── summarization/
+│   │   │   ├── AbstractSummary.py
+│   │   │   ├── ArabicSummary.py
+│   │   │   ├── EnglishSummary.py
+│   │   │   ├── JSONOutputHandler.py
+│   │   │   └── __init__.py
+│   │
+│   │   ├── text_to_speech/
+│   │   │   ├── AbstractConverter.py
+│   │   │   ├── ArabicConverter.py
+│   │   │   ├── EnglishConverter.py
+│   │   │   └── __init__.py
+│   │
+│   │   └── transcription/
+│   │       ├── AudioTranscription.py
+│   │       └── __init__.py
+│
 │   ├── .env
 │   ├── .env.example
-│   ├── requirements.txt
-│   └── main.py
+│   ├── main.py
+│   └── requirements.txt
 │
 ├── LICENSE
-├── README.md
+└── README.md
 ```
 
 ## 🧪 How to Run
