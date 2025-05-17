@@ -7,8 +7,12 @@ class Settings(BaseSettings):
     APP_NAME: str
     APP_DESCRIPTION: str
     APP_VERSION: str
-    HF_TOKEN: str
     
+    # APIs Tokens
+    HF_TOKEN: str
+    GOOGLE_API_KEY: str
+    GROK_API_KEY: str
+    TAVILY_API_KEY: str
     
     class Config:
         env_file = ".env"
