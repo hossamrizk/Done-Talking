@@ -54,3 +54,5 @@ class TextAnalyzer(BaseService):
             if top_word in counter
         }
         return top_word, freq, speaker_counts
+    
+    

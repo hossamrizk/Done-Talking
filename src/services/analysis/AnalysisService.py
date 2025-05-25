@@ -47,3 +47,6 @@ class AnalysisService(BaseService):
     
     def get_total_number_of_speakers(self):
         return self.speaker_analyzer.get_total_number_of_speakers()
+    
+    def get_total_audio_duration(self, audio_path: str):
+        return self.speaker_analyzer.get_total_audio_duration(audio_path=audio_path)

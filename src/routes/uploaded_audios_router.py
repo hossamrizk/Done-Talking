@@ -38,7 +38,8 @@ async def upload_audio(audio: UploadFile = File(...)):
         most_used_word = analysis_service.get_most_used_word()
         total_speakers = analysis_service.get_total_number_of_speakers()
         language_type = analysis_service.get_language_type()
-
+        audio_duration = analysis_service.get_total_audio_duration(audio_path=uploaded_file_path)
+        
         if language_type == 'en':
             data = {
                 "most_talked_speakers": most_talked_speakers,

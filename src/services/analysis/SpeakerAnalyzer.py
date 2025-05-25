@@ -2,6 +2,7 @@ from ..BaseService import BaseService
 from typing import List, Dict
 import pandas as pd 
 from langdetect import detect
+from pydub import AudioSegment
 
 class SpeakerAnalyzer(BaseService):
     def __init__(self, df: pd.DataFrame):
@@ -48,3 +49,17 @@ class SpeakerAnalyzer(BaseService):
         """
         self.logger.info("Calculating total number of unique speakers")
         return self.df['speaker'].unique().size
+    
+    def get_total_audio_duration(self, audio_path: str) -> float:
+        """
+        Get the total audio duration.
+        
+        Args:
+            audio_path: str = Audio directory.
+        
+        returns:
+            duration_seconds: float = Audio duration in seconds
+        """ 
+        audio = AudioSegment.from_file(audio_path)
+        duration_seconds = len(audio) / 1000.0
+        return duration_seconds

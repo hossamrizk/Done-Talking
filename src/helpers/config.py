@@ -14,8 +14,17 @@ class Settings(BaseSettings):
     GROK_API_KEY: str
     TAVILY_API_KEY: str
     
+    # ----------------------------------------- DB Configurations ----------------------------------
+    POSTGRES_USERNAME: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_DATABASE_NAME: str
+    DB_DRIVER: str
+    
     class Config:
         env_file = ".env"
+        extra = "forbid"
 
 def get_settings():
     """
