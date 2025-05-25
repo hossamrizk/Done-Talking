@@ -1,4 +1,4 @@
 from .base import Base
-from .models import MediaInput
+from .models import MediaInput, SourceType
 from .insert_into_db import insert_into_db
 from .session import get_db

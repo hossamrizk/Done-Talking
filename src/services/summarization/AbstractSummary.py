@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from ..BaseService import BaseService
-from models import MeetingSummary
+from schemas import MeetingSummary
 from langchain_core.output_parsers import PydanticOutputParser
 
 class AbstractSummary(ABC):

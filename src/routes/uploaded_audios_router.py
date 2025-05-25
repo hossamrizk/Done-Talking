@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from services import (UploadAudio, AudioDiarization, AnalysisService,
                       EnglishSummary, ArabicSummary, EnglishConverter, ArabicConverter,
                       EnglishFormatter, ArabicFormatter)
+from db import insert_into_db, SourceType
 from helpers import load_csv, load_json
 import os
 
@@ -73,6 +74,16 @@ async def upload_audio(audio: UploadFile = File(...)):
             if not os.path.exists(audio_path):
                 raise HTTPException(status_code=500, detail="Audio file not found")
 
+            # Save results in db
+            insert_into_db(
+                source_type=SourceType.UPLOAD,
+                source_location=uploaded_file_path,
+                duration=audio_duration,
+                diarization_csv_path=csv_path,
+                summary_json_path=json_path,
+                audio_summary_path=audio_path
+            )
+            
             return FileResponse(
                 audio_path,
                 media_type="audio/mpeg"
@@ -107,6 +118,16 @@ async def upload_audio(audio: UploadFile = File(...)):
             
             if not os.path.exists(audio_path):
                 raise HTTPException(status_code=500, detail="Audio file not found")
+
+            # Save results in db
+            insert_into_db(
+                source_type=SourceType.UPLOAD,
+                source_location=uploaded_file_path,
+                duration=audio_duration,
+                diarization_csv_path=csv_path,
+                summary_json_path=json_path,
+                audio_summary_path=audio_path
+            )
 
             return FileResponse(
                 audio_path,
