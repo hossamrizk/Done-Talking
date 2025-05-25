@@ -18,3 +18,4 @@ matplotlib==3.10.1
 scikit-learn==1.6.1
 inflect==7.5.0
 langdetect==1.0.9
+psycopg2==2.9.10

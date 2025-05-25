@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService
-from models import DownloadRequest
+from schemas import DownloadRequest
 from helpers import load_csv, load_json
 import os
 download_audio_router = APIRouter()
