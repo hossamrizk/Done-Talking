@@ -1,52 +1,21 @@
-from fastapi import APIRouter, HTTPException
-from services import AudioTransferService, SummarizationService, AudioDiarizationService, TTSService
-from schemas import DownloadRequest
-from helpers import load_csv, load_json
-import os
-download_audio_router = APIRouter()
+from controllers import DownloadController, AudioController
+from db import SourceType
+from fastapi import APIRouter, UploadFile, File, HTTPException
 
-@download_audio_router.post("/download_audio")
-async def download_audio(request: DownloadRequest):
+
+download_handler = DownloadController()
+audio_processor = AudioController()
+
+
+download_router = APIRouter()
+@download_router.post("/download_audio")
+async def upload_audio(audio: UploadFile = File(...)):
+    """Download and process audio file"""
     try:
-        video_url = request.video_url
-        at = AudioTransferService()
-        downloaded_file_path = at.download_audio(video_url=video_url)
-        
-        # Running Diralization
-        ad = AudioDiarizationService()
-        
-        _, _, csv_path = ad.diarize(audio_file=downloaded_file_path)
-
-        # Load csv file
-        speakers, text = load_csv(csv_path=csv_path)
-
-        # Summarization
-        sg = SummarizationService()
-        result = sg.run_summarization_crew(speakers=speakers, text=text)
-        
-        # Get text data
-        json_path = os.path.join(sg.output_path, "summarized_report.json")
-        
-        # Check if the file was created
-        if not os.path.exists(json_path):
-            raise HTTPException(status_code=500, detail="File is not existing")
-
-        # Get text data
-        meeting_topic, key_speakers, key_decisions, action_items, discussion_highlights = load_json(json_path)
-        text = f"""
-            Metting Topic is: {meeting_topic},
-            key Speakers are: {key_speakers},
-            key Decisions are: {key_decisions},
-            Action Items are: {action_items},
-            Discussion Highlights are: {discussion_highlights}
-        """
-        # TTS
-        tts = TTSService()
-        await tts.convert_text_to_speech(text)
-
-        return {"A summarized audio saved successfully"}
-
+        file_path = download_handler.get_file_path(audio)
+        return await audio_processor.process(file_path, SourceType.URL)
+    except HTTPException:
+        raise
     except Exception as e:
-        print(f"Error: {str(e)}")
-        raise HTTPException(status_code=500, detail="Audio processing failed")
-
+        print(f"Upload error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
