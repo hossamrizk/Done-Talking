@@ -8,7 +8,10 @@ class Settings(BaseSettings):
     APP_DESCRIPTION: str
     APP_VERSION: str
     
-    # APIs Tokens
+    # ----------------------------------------- APP Security -------------------------------------
+    ADMIN_SECRET_KEY: str
+    
+    # ----------------------------------------- APIs Tokens --------------------------------------
     HF_TOKEN: str
     GOOGLE_API_KEY: str
     GROK_API_KEY: str
@@ -22,6 +25,10 @@ class Settings(BaseSettings):
     POSTGRES_DATABASE_NAME: str
     DB_DRIVER: str
     
+    # ----------------------------------------- Zoom Configurations ---------------------------------
+    ZOOM_CLIENT_ID: str
+    ZOOM_CLIENT_SECRET: str 
+        
     class Config:
         env_file = ".env"
         extra = "forbid"

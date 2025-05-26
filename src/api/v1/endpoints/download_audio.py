@@ -1,6 +1,7 @@
 from controllers import DownloadController, AudioController
 from db import SourceType
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from schemas import DownloadRequest
+from fastapi import HTTPException, APIRouter
 
 
 download_handler = DownloadController()
@@ -9,10 +10,11 @@ audio_processor = AudioController()
 
 download_router = APIRouter()
 @download_router.post("/download_audio")
-async def upload_audio(audio: UploadFile = File(...)):
+async def upload_audio(request: DownloadRequest):
     """Download and process audio file"""
     try:
-        file_path = download_handler.get_file_path(audio)
+        video_url = request.video_url
+        file_path = download_handler.get_file_path(video_url = video_url)
         return await audio_processor.process(file_path, SourceType.URL)
     except HTTPException:
         raise

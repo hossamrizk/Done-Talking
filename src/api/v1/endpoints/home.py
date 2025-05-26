@@ -3,7 +3,7 @@ from helpers.config import get_settings, Settings
 
 home_router = APIRouter()
 
-@home_router.get("/")
+@home_router.get("/home")
 async def home(app_settings: Settings = Depends(get_settings)):
     app_name = app_settings.APP_NAME
     app_description = app_settings.APP_DESCRIPTION
@@ -13,4 +13,3 @@ async def home(app_settings: Settings = Depends(get_settings)):
         "app_description": app_description,
         "app_version": app_version
     }
-    
