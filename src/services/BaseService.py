@@ -1,4 +1,4 @@
-from helpers import get_settings
+from core import get_settings
 import logging
 import os
 

@@ -2,7 +2,7 @@ from pyannote.audio import Pipeline
 from .CSVHandler import CSVHandler
 from ..transcription import AudioTranscription
 from ..BaseService import BaseService
-from helpers.config import get_settings
+from core import get_settings
 from pathlib import Path
 import torch
 

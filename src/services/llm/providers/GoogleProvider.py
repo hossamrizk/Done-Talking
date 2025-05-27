@@ -1,7 +1,7 @@
 from .BaseLLMProvider import BaseLLMProvider
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.language_models.chat_models import BaseChatModel
-from helpers import get_settings
+from core import get_settings
 from typing import Optional
 from ...BaseService import BaseService
 

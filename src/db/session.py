@@ -1,7 +1,7 @@
 from .base import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from helpers import get_settings
+from core import get_settings
 
 db_host = get_settings().POSTGRES_HOST
 db_port = get_settings().POSTGRES_PORT
