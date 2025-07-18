@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     DB_DRIVER: str
     
     # ----------------------------------------- Zoom Configurations ---------------------------------
-    ZOOM_CLIENT_ID: str
-    ZOOM_CLIENT_SECRET: str 
+    #ZOOM_CLIENT_ID: str
+    #ZOOM_CLIENT_SECRET: str 
         
     class Config:
         env_file = ".env"

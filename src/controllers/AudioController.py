@@ -18,6 +18,7 @@ class AudioController:
     
     def _analyze_audio(self, file_path: str) -> Tuple[str, Dict[str, Any], str]:
         """Analyze audio and return CSV path, analysis data, and language"""
+        print(file_path)
         _, _, csv_path = self.diarization.diarize(audio_file=file_path)
         analysis_service = AnalysisService(csv_path=csv_path)
         

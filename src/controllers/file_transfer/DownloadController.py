@@ -18,8 +18,9 @@ class DownloadController(AbstractHandler):
         :return: Path to the downloaded audio file.
         """
         try:
-            video_url = DownloadRequest.video_url
-            file_path = self.download_service.handle(video_url = video_url)
+            #video_url = DownloadRequest.video_url
+            full_result = self.download_service.handle(video_url = video_url)
+            file_path = full_result.get("file_path")
             self.logger.info(f"File downloaded successfully and saved at: {file_path}")
             return file_path
         except Exception as e:

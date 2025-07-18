@@ -6,7 +6,8 @@ from fastapi import HTTPException
 class DownloadAudio(AbstractAudioHandler):
     def __init__(self):
         super().__init__()
-        self.downloaded_audios_path = Path(self.base_service.downloaded_audios_path)
+        self.download_dir = Path(self.base_service.downloaded_audios_path)
+        
 
     def handle(self, video_url: str) -> dict:
         try:

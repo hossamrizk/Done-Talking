@@ -20,4 +20,4 @@ async def upload_audio(request: DownloadRequest):
         raise
     except Exception as e:
         print(f"Upload error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Download failed: {str(e)}")

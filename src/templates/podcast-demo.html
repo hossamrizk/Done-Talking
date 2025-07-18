@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Done Talking</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .nav-link-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Main Container */
+        .main-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .card-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #666;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-help {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #e1e5e9;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-content {
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            color: #667eea;
+            margin: 0 auto 1rem;
+        }
+
+        .upload-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Results */
+        .result-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(248, 249, 250, 0.95);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item h4 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .result-item ul {
+            padding-left: 1.5rem;
+        }
+
+        .result-item li {
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            padding: 1rem;
+            background: rgba(253, 232, 232, 0.95);
+            border-radius: 6px;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        /* API Status */
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .api-status.success {
+            color: #28a745;
+            border-color: rgba(40, 167, 69, 0.2);
+        }
+
+        .api-status.error {
+            color: #dc3545;
+            border-color: rgba(220, 53, 69, 0.2);
+        }
+
+        .text-success {
+            color: #28a745;
+        }
+
+        .text-error {
+            color: #dc3545;
+        }
+
+        /* Loading Animation */
+        .loading-text::after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Page visibility */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .file-name {
+            color: #28a745;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="nav-brand" onclick="showPage('home')">
+                <i data-lucide="headphones" class="nav-icon"></i>
+                <span class="nav-title">Done Talking</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="showPage('download')" id="nav-download">
+                    <i data-lucide="headphones" class="nav-link-icon"></i>
+                    <span>Video URL</span>
+                </a>
+                <a href="#" class="nav-link" onclick="showPage('upload')" id="nav-upload">
+                    <i data-lucide="upload" class="nav-link-icon"></i>
+                    <span>Upload Audio</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="main-container">
+            <div class="container">
+                <div class="hero-section">
+                    <h1 class="hero-title">Done Talking</h1>
+                    <p class="hero-description">
+                        Extract key insights from videos and audio files with AI. 
+                        Save time and never miss important information again.
+                    </p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-icon-wrapper">
+                                <i data-lucide="headphones" class="card-icon"></i>
+                            </div>
+                            <h2 class="card-title">Video URL</h2>
+                            <p class="card-description">
+                                Enter the URL of any youtube video to get an AI-generated summary and key highlights.
+                            </p>
+                            <a href="#" class="btn btn-primary" onclick="showPage('download')">
+                                Summarize from URL
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-icon-wrapper">
+                                <i data-lucide="upload" class="card-icon"></i>
+                            </div>
+                            <h2 class="card-title">Upload Audio</h2>
+                            <p class="card-description">
+                                Upload an audio file from your device to extract the main points and create a concise summary.
+                            </p>
+                            <a href="#" class="btn btn-primary" onclick="showPage('upload')">
+                                Upload Audio File
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Page -->
+    <div id="download" class="page">
+        <div class="main-container">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Summarize a video from URL</h1>
+                    <p class="page-description">
+                        Enter the URL to a youtube video, and we'll generate a summary and extract key highlights.
+                    </p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-card">
+                        <form id="podcastForm" class="form">
+                            <div class="form-group">
+                                <label for="podcast-url" class="form-label">Video URL</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="link" class="input-icon"></i>
+                                    <input 
+                                        id="podcast-url" 
+                                        name="video_url"
+                                        type="url" 
+                                        placeholder="https://example.com/youtube-episode"
+                                        class="form-input"
+                                        required
+                                    />
+                                </div>
+                                <p class="form-help">
+                                    Enter the direct URL to the youtube video
+                                </p>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-full">
+                                Summarize it!
+                            </button>
+                        </form>
+
+                        <div id="resultContainer" class="result-container" style="display: none;">
+                            <h3>Processing Results</h3>
+                            <div id="resultContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Page -->
+    <div id="upload" class="page">
+        <div class="main-container">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Upload Audio File</h1>
+                    <p class="page-description">
+                        Upload any audio file from your device, and we'll generate a summary and extract key highlights.
+                    </p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-card">
+                        <form id="uploadForm" class="form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="audio-file" class="form-label">Upload Audio File</label>
+                                
+                                <div class="upload-area">
+                                    <input id="audio-file" name="audio" type="file" accept="audio/*" class="file-input" required />
+                                    <div class="upload-content">
+                                        <i data-lucide="upload" class="upload-icon"></i>
+                                        <p class="upload-title">Click or drag file to upload</p>
+                                        <p class="upload-description">
+                                            MP3, WAV, OGG, or M4A (max. 50MB)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-full">
+                                Summarize Audio
+                            </button>
+                        </form>
+                        
+                        <div id="uploadResultContainer" class="result-container" style="display: none;">
+                            <h3>Processing Results</h3>
+                            <div id="uploadResultContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Status -->
+    <div id="apiStatus" class="api-status">
+        <span id="apiStatusIcon"></span>
+        <span id="apiStatusText">Demo Mode - API not connected</span>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (pageId === 'download') {
+                document.getElementById('nav-download').classList.add('active');
+            } else if (pageId === 'upload') {
+                document.getElementById('nav-upload').classList.add('active');
+            }
+        }
+
+        // Handle podcast URL form submission
+        document.getElementById('podcastForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const urlInput = document.getElementById('podcast-url');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultContent = document.getElementById('resultContent');
+            
+            // Show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="loading-text">Processing</span>';
+            
+            try {
+                const response = await fetch('/v1/download_audio?api_key_query=HossamRizk951753', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        video_url: urlInput.value
+                    }),
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                // Render an audio player
+                resultContent.innerHTML = `
+                    <div class="result-item">
+                        <h4>Processed Audio:</h4>
+                        <audio controls src="${url}"></audio>
+                        <br>
+                        <a href="${url}" download="processed_audio.mp3" class="btn btn-primary" style="margin-top:10px;">Download Audio</a>
+                    </div>
+                `;
+                resultContainer.style.display = 'block';
+                
+            } catch (error) {
+                console.error('API error:', error);
+                resultContent.innerHTML = `
+                    <div class="error-message">
+                        <p><strong>Error processing your URL:</strong> ${error.message}</p>
+                        <p>Please check the URL and try again.</p>
+                    </div>
+                `;
+                resultContainer.style.display = 'block';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Summarize Podcast';
+            }
+        });
+
+        // Handle file upload form submission
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const fileInput = document.getElementById('audio-file');
+            const resultContainer = document.getElementById('uploadResultContainer');
+            const resultContent = document.getElementById('uploadResultContent');
+            
+            if (!fileInput.files[0]) {
+                alert('Please select an audio file');
+                return;
+            }
+            
+            // Show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="loading-text">Processing</span>';
+            
+            try {
+                const formData = new FormData();
+                formData.append('audio', fileInput.files[0]);
+                
+                const response = await fetch('/v1/upload_audio?api_key_query=HossamRizk951753', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                // Render an audio player
+                resultContent.innerHTML = `
+                    <div class="result-item">
+                        <h4>Processed Audio:</h4>
+                        <audio controls src="${url}"></audio>
+                        <br>
+                        <a href="${url}" download="processed_audio.mp3" class="btn btn-primary" style="margin-top:10px;">Download Audio</a>
+                    </div>
+                `;
+                resultContainer.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                resultContent.innerHTML = `
+                    <div class="error-message">
+                        <p><strong>Error processing your file:</strong> ${error.message}</p>
+                        <p>Please try uploading a different audio file.</p>
+                    </div>
+                `;
+                resultContainer.style.display = 'block';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Summarize Audio';
+            }
+        });
+
+        // File upload drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('audio-file');
+        
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                showFileName(fileInput.files[0].name);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                showFileName(e.target.files[0].name);
+            }
+        });
+        
+        function showFileName(fileName) {
+            const existingFileName = document.querySelector('.file-name');
+            if (existingFileName) {
+                existingFileName.remove();
+            }
+            
+            const fileNameElement = document.createElement('p');
+            fileNameElement.textContent = `Selected: ${fileName}`;
+            fileNameElement.className = 'file-name';
+            uploadArea.querySelector('.upload-content').appendChild(fileNameElement);
+        }
+
+        // Initialize API status
+        document.addEventListener('DOMContentLoaded', async () => {
+            const statusElement = document.getElementById('apiStatus');
+            const statusIcon = document.getElementById('apiStatusIcon');
+            const statusText = document.getElementById('apiStatusText');
+            
+            try {
+                const response = await fetch('/v1/home?api_key_query=HossamRizk951753');
+                if (response.ok) {
+                    const data = await response.json();
+                    statusIcon.innerHTML = '<i data-lucide="check-circle" class="text-success"></i>';
+                    statusText.textContent = `${data.app_name} v${data.app_version} - API Connected`;
+                    statusElement.className = 'api-status success';
+                } else {
+                    throw new Error('API not responding');
+                }
+            } catch (error) {
+                statusIcon.innerHTML = '<i data-lucide="alert-circle" class="text-error"></i>';
+                statusText.textContent = 'API connection failed';
+                statusElement.className = 'api-status error';
+                console.error('API check failed:', error);
+            }
+            
+            // Refresh icons after dynamic insertion
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

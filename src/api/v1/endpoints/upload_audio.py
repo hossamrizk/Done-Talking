@@ -1,10 +1,9 @@
-from controllers import UploadController, DownloadController, AudioController
+from controllers import UploadController, AudioController
 from db import SourceType
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
 
 upload_handler = UploadController()
-download_handler = DownloadController()
 audio_processor = AudioController()
 
 
