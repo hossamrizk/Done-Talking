@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pathlib import Path
 
 class Settings(BaseSettings):
     """
@@ -25,12 +26,8 @@ class Settings(BaseSettings):
     POSTGRES_DATABASE_NAME: str
     DB_DRIVER: str
     
-    # ----------------------------------------- Zoom Configurations ---------------------------------
-    GOOGLE_CLIENT_ID: str
-    
-        
     class Config:
-        env_file = ".env"
+        env_file = Path(__file__).parent.parent.parent / ".env"
         extra = "forbid"
 
 def get_settings():

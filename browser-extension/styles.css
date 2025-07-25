@@ -1,0 +1,358 @@
+/* styles.css - Done-Talking Extension Content Script Styles */
+
+/* Main recording button */
+#done-talking-btn {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 999999 !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 25px !important;
+    cursor: pointer !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    transition: all 0.3s ease !important;
+    user-select: none !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    text-decoration: none !important;
+}
+
+#done-talking-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+}
+
+#done-talking-btn:active {
+    transform: translateY(0) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* Recording state */
+#done-talking-btn.recording {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+    animation: pulse 2s infinite !important;
+}
+
+#done-talking-btn.recording:hover {
+    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%) !important;
+}
+
+/* Processing state */
+#done-talking-btn.processing {
+    background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%) !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* Success state */
+#done-talking-btn.success {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+}
+
+/* Recording indicator */
+#done-talking-recording-indicator {
+    position: fixed !important;
+    top: 70px !important;
+    right: 20px !important;
+    z-index: 999998 !important;
+    background: rgba(244, 67, 54, 0.95) !important;
+    color: white !important;
+    padding: 8px 15px !important;
+    border-radius: 20px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    animation: pulse 2s infinite !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+#done-talking-recording-indicator .pulse-dot {
+    width: 8px !important;
+    height: 8px !important;
+    background: #ff0000 !important;
+    border-radius: 50% !important;
+    animation: pulse-dot 1s infinite !important;
+}
+
+/* Success/Error notification */
+.done-talking-notification {
+    position: fixed !important;
+    top: 70px !important;
+    right: 20px !important;
+    z-index: 999998 !important;
+    padding: 12px 18px !important;
+    border-radius: 20px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    animation: slideInRight 0.3s ease-out !important;
+    max-width: 300px !important;
+    word-wrap: break-word !important;
+}
+
+.done-talking-notification.success {
+    background: rgba(76, 175, 80, 0.95) !important;
+    color: white !important;
+}
+
+.done-talking-notification.error {
+    background: rgba(244, 67, 54, 0.95) !important;
+    color: white !important;
+}
+
+.done-talking-notification.info {
+    background: rgba(33, 150, 243, 0.95) !important;
+    color: white !important;
+}
+
+.done-talking-notification.warning {
+    background: rgba(255, 193, 7, 0.95) !important;
+    color: #333 !important;
+}
+
+/* Progress indicator for processing */
+#done-talking-progress {
+    position: fixed !important;
+    top: 70px !important;
+    right: 20px !important;
+    z-index: 999998 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #333 !important;
+    padding: 15px 20px !important;
+    border-radius: 12px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 13px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    min-width: 200px !important;
+}
+
+#done-talking-progress .progress-text {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+#done-talking-progress .progress-bar {
+    width: 100% !important;
+    height: 4px !important;
+    background: #e0e0e0 !important;
+    border-radius: 2px !important;
+    overflow: hidden !important;
+}
+
+#done-talking-progress .progress-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #667eea, #764ba2) !important;
+    border-radius: 2px !important;
+    animation: progressAnimation 2s ease-in-out infinite !important;
+    width: 0% !important;
+    transition: width 0.3s ease !important;
+}
+
+/* Floating stats panel (optional) */
+#done-talking-stats {
+    position: fixed !important;
+    top: 120px !important;
+    right: 20px !important;
+    z-index: 999997 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #333 !important;
+    padding: 12px 15px !important;
+    border-radius: 10px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 11px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    min-width: 150px !important;
+}
+
+#done-talking-stats .stat-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin: 3px 0 !important;
+}
+
+#done-talking-stats .stat-label {
+    opacity: 0.7 !important;
+}
+
+#done-talking-stats .stat-value {
+    font-weight: 600 !important;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+@keyframes pulse-dot {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes progressAnimation {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #done-talking-btn {
+        top: 10px !important;
+        right: 10px !important;
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+    
+    #done-talking-recording-indicator,
+    .done-talking-notification,
+    #done-talking-progress {
+        top: 55px !important;
+        right: 10px !important;
+        max-width: 250px !important;
+    }
+    
+    #done-talking-stats {
+        top: 105px !important;
+        right: 10px !important;
+    }
+}
+
+/* Platform-specific adjustments */
+/* Google Meet */
+.meet-google-com #done-talking-btn {
+    top: 80px !important; /* Avoid Google Meet's top bar */
+}
+
+/* Zoom */
+body[class*="zoom"] #done-talking-btn {
+    top: 60px !important;
+}
+
+/* Teams */
+body[class*="teams"] #done-talking-btn {
+    top: 70px !important;
+}
+
+/* WebEx */
+body[class*="webex"] #done-talking-btn {
+    top: 65px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #done-talking-btn {
+        border: 2px solid #000 !important;
+        background: #000 !important;
+        color: #fff !important;
+    }
+    
+    #done-talking-btn.recording {
+        background: #800000 !important;
+        border-color: #800000 !important;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    #done-talking-progress {
+        background: rgba(50, 50, 50, 0.95) !important;
+        color: #fff !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    #done-talking-stats {
+        background: rgba(50, 50, 50, 0.95) !important;
+        color: #fff !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+/* Ensure elements don't interfere with meeting controls */
+#done-talking-btn,
+#done-talking-recording-indicator,
+.done-talking-notification,
+#done-talking-progress,
+#done-talking-stats {
+    pointer-events: auto !important;
+}
+
+/* Hide elements during fullscreen presentations */
+:fullscreen #done-talking-btn,
+:fullscreen #done-talking-recording-indicator,
+:fullscreen .done-talking-notification,
+:fullscreen #done-talking-progress,
+:fullscreen #done-talking-stats {
+    display: none !important;
+}
+
+/* Accessibility improvements */
+#done-talking-btn:focus {
+    outline: 2px solid #4285f4 !important;
+    outline-offset: 2px !important;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    #done-talking-btn,
+    #done-talking-recording-indicator,
+    .done-talking-notification,
+    #done-talking-progress {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    #done-talking-btn:hover {
+        transform: none !important;
+    }
+}

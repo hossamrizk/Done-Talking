@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Done-Talking",
+  "version": "0.1.0",
+  "description": "Record and analyze meeting insights with AI",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [{
+    "matches": [
+      "https://meet.google.com/*",
+      "https://*.zoom.us/*",
+      "https://*.teams.microsoft.com/*",
+      "https://*.webex.com/*"
+    ],
+    "js": ["content.js"],
+    "css": ["styles.css"]
+  }],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Done-Talking"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+  //,
+  //"icons": {
+    //"16": "icons/icon16.png",
+    //"48": "icons/icon48.png",
+    //"128": "icons/icon128.png"
+  //}
+}
