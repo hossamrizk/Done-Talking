@@ -1,12 +1,15 @@
-// Enhanced Debug Version - Shows real-time audio status
 class DoneTalkingRecorder {
     constructor() {
         this.isRecording = false;
         this.recorder = null;
         this.audioChunks = [];
         this.apiUrl = 'http://localhost:8000';
-        this.stream = null;
+        this.micStream = null;
+        this.systemStream = null;
+        this.finalStream = null;
         this.debugPanel = null;
+        this.audioContext = null;
+        this.startTime = null;
         this.init();
     }
     
@@ -91,7 +94,11 @@ class DoneTalkingRecorder {
                     this.toggleRecording();
                     break;
                 case 'getStatus':
-                    sendResponse({isRecording: this.isRecording});
+                    sendResponse({
+                        isRecording: this.isRecording,
+                        startTime: this.startTime,
+                        platform: this.detectPlatform()
+                    });
                     break;
             }
         });
@@ -107,106 +114,205 @@ class DoneTalkingRecorder {
     
     async startRecording() {
         console.log('🎬 Starting recording...');
-        this.updateDebugPanel('🎬 Starting recording...');
+        this.updateDebugPanel('🎬 Starting audio capture...');
         
         try {
-            // Step 1: Request display media
-            console.log('📋 Requesting display media with audio...');
-            this.updateDebugPanel(`
-                📋 Requesting display media...<br>
-                ⏳ Permission dialog should appear<br>
-                ⚠️ Make sure to check "Share audio"!
-            `);
+            // Reset streams
+            this.micStream = null;
+            this.systemStream = null;
+            this.finalStream = null;
             
-            this.stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,  // Include video to ensure dialog appears
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    sampleRate: 44100
-                }
-            });
+            let debugInfo = '🎵 Audio Capture Strategy:<br>';
             
-            // Step 2: Analyze stream
-            const audioTracks = this.stream.getAudioTracks();
-            const videoTracks = this.stream.getVideoTracks();
-            
-            console.log('🎵 Audio tracks:', audioTracks.length);
-            console.log('📹 Video tracks:', videoTracks.length);
-            
-            let debugInfo = `
-                ✅ Stream obtained!<br>
-                🎵 Audio tracks: <span style="color: ${audioTracks.length > 0 ? '#00ff00' : '#ff0000'}">${audioTracks.length}</span><br>
-                📹 Video tracks: ${videoTracks.length}<br>
-            `;
-            
-            if (audioTracks.length === 0) {
-                debugInfo += `<br><span style="color: #ff0000">❌ NO AUDIO TRACKS!</span><br>
-                💡 You need to check "Share audio" in the permission dialog<br>
-                🔄 Click record again and make sure audio is enabled`;
+            // Strategy 1: Always get microphone (most reliable)
+            try {
+                console.log('🎙️ Requesting microphone...');
+                debugInfo += '🎙️ Microphone: Requesting...<br>';
                 
-                this.updateDebugPanel(debugInfo);
-                this.showNotification('❌ No audio captured! Check "Share audio" checkbox', 'error');
+                this.micStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: 44100,
+                        channelCount: 2
+                    }
+                });
                 
-                // Stop all tracks and return
-                this.stream.getTracks().forEach(track => track.stop());
+                debugInfo += '✅ Microphone: Success!<br>';
+                console.log('✅ Microphone stream obtained');
+                
+                // Test microphone stream
+                const micTracks = this.micStream.getAudioTracks();
+                debugInfo += `└ Tracks: ${micTracks.length}<br>`;
+                micTracks.forEach((track, i) => {
+                    debugInfo += `└ Track ${i}: ${track.label} (${track.readyState})<br>`;
+                });
+                
+            } catch (micError) {
+                console.error('❌ Microphone failed:', micError);
+                debugInfo += `❌ Microphone: Failed (${micError.name})<br>`;
+                this.showNotification('❌ Microphone access denied! Please allow microphone access.', 'error');
                 return;
             }
             
-            // Step 3: Audio track details
-            audioTracks.forEach((track, index) => {
-                console.log(`🎵 Audio track ${index}:`, {
+            // Strategy 2: Try to get tab audio (optional enhancement)
+            try {
+                console.log('🔊 Requesting tab audio...');
+                debugInfo += '🔊 Tab Audio: Requesting...<br>';
+                
+                // Request tab audio with explicit instructions
+                this.systemStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { mediaSource: 'tab' },
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false,
+                        sampleRate: 44100
+                    }
+                });
+                
+                // Remove video track immediately
+                const videoTracks = this.systemStream.getVideoTracks();
+                videoTracks.forEach(track => {
+                    track.stop();
+                    this.systemStream.removeTrack(track);
+                });
+                
+                const systemAudioTracks = this.systemStream.getAudioTracks();
+                if (systemAudioTracks.length > 0) {
+                    debugInfo += '✅ Tab Audio: Success!<br>';
+                    debugInfo += `└ Tracks: ${systemAudioTracks.length}<br>`;
+                    console.log('✅ Tab audio obtained');
+                } else {
+                    debugInfo += '⚠️ Tab Audio: No audio shared<br>';
+                    this.systemStream = null;
+                }
+                
+            } catch (systemError) {
+                console.warn('⚠️ Tab audio failed:', systemError);
+                debugInfo += '⚠️ Tab Audio: Not available<br>';
+                this.systemStream = null;
+            }
+            
+            // Strategy 3: Create final recording stream
+            debugInfo += '<br>🔗 Creating Recording Stream:<br>';
+            
+            if (this.systemStream && this.systemStream.getAudioTracks().length > 0) {
+                // If we have both mic and system audio, combine them
+                console.log('🔀 Combining microphone and system audio');
+                debugInfo += '🔀 Combining mic + system audio<br>';
+                
+                try {
+                    // Create AudioContext to mix streams
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const destination = this.audioContext.createMediaStreamDestination();
+                    
+                    // Add microphone
+                    const micSource = this.audioContext.createMediaStreamSource(this.micStream);
+                    const micGain = this.audioContext.createGain();
+                    micGain.gain.value = 1.0; // Full microphone volume
+                    micSource.connect(micGain);
+                    micGain.connect(destination);
+                    
+                    // Add system audio
+                    const systemSource = this.audioContext.createMediaStreamSource(this.systemStream);
+                    const systemGain = this.audioContext.createGain();
+                    systemGain.gain.value = 0.8; // Slightly lower system audio to avoid feedback
+                    systemSource.connect(systemGain);
+                    systemGain.connect(destination);
+                    
+                    this.finalStream = destination.stream;
+                    debugInfo += '✅ Mixed stream created<br>';
+                    
+                } catch (mixError) {
+                    console.warn('⚠️ Audio mixing failed, using microphone only:', mixError);
+                    debugInfo += '⚠️ Mixing failed, using mic only<br>';
+                    this.finalStream = this.micStream;
+                }
+            } else {
+                // Use microphone only
+                console.log('🎙️ Using microphone only');
+                debugInfo += '🎙️ Using microphone only<br>';
+                this.finalStream = this.micStream;
+            }
+            
+            // Verify final stream
+            const finalTracks = this.finalStream.getAudioTracks();
+            if (finalTracks.length === 0) {
+                throw new Error('No audio tracks in final stream');
+            }
+            
+            debugInfo += `✅ Final stream: ${finalTracks.length} tracks<br>`;
+            
+            // Test each track
+            finalTracks.forEach((track, i) => {
+                debugInfo += `└ Track ${i}: ${track.enabled ? '🟢' : '🔴'} ${track.label}<br>`;
+                console.log(`Track ${i}:`, {
                     label: track.label,
                     enabled: track.enabled,
                     muted: track.muted,
                     readyState: track.readyState
                 });
-                
-                debugInfo += `<br>🎵 Track ${index}: ${track.label}<br>
-                    └ Enabled: <span style="color: ${track.enabled ? '#00ff00' : '#ff0000'}">${track.enabled}</span><br>
-                    └ Muted: <span style="color: ${track.muted ? '#ff0000' : '#00ff00'}">${track.muted}</span><br>
-                    └ State: ${track.readyState}`;
             });
             
-            // Step 4: Remove video tracks (we only want audio)
-            videoTracks.forEach(track => {
-                track.stop();
-                this.stream.removeTrack(track);
-            });
-            debugInfo += `<br><br>📹 Removed ${videoTracks.length} video tracks`;
+            // Strategy 4: Set up MediaRecorder with fallback MIME types
+            debugInfo += '<br>📼 Setting up recorder:<br>';
             
-            // Step 5: Set up MediaRecorder
-            const mimeType = 'audio/webm;codecs=opus';
-            if (!MediaRecorder.isTypeSupported(mimeType)) {
-                throw new Error('MIME type not supported: ' + mimeType);
+            const mimeTypes = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/mp4',
+                'audio/ogg',
+                ''
+            ];
+            
+            let selectedMimeType = '';
+            for (const type of mimeTypes) {
+                if (!type || MediaRecorder.isTypeSupported(type)) {
+                    selectedMimeType = type;
+                    break;
+                }
             }
             
-            this.recorder = new MediaRecorder(this.stream, {
-                mimeType: mimeType,
-                audioBitsPerSecond: 128000
-            });
+            debugInfo += `📼 MIME type: ${selectedMimeType || 'browser default'}<br>`;
+            console.log('📼 Using MIME type:', selectedMimeType);
             
+            const recordingOptions = {
+                audioBitsPerSecond: 128000
+            };
+            
+            if (selectedMimeType) {
+                recordingOptions.mimeType = selectedMimeType;
+            }
+            
+            this.recorder = new MediaRecorder(this.finalStream, recordingOptions);
+            
+            // Set up recording event handlers
             this.audioChunks = [];
             let chunkCount = 0;
-            let totalBytes = 0;
+            let totalSize = 0;
             
             this.recorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
+                if (event.data && event.data.size > 0) {
                     this.audioChunks.push(event.data);
                     chunkCount++;
-                    totalBytes += event.data.size;
+                    totalSize += event.data.size;
                     
-                    console.log(`📊 Audio chunk ${chunkCount}: ${event.data.size} bytes`);
+                    console.log(`📊 Chunk ${chunkCount}: ${event.data.size} bytes`);
                     
-                    // Update debug panel with real-time stats
-                    const realTimeInfo = debugInfo + `<br><br>📊 Recording Stats:<br>
-                        └ Chunks: ${chunkCount}<br>
-                        └ Total bytes: ${totalBytes}<br>
-                        └ Latest chunk: ${event.data.size} bytes<br>
-                        └ Status: <span style="color: #00ff00">🔴 RECORDING</span>`;
-                    this.updateDebugPanel(realTimeInfo);
+                    // Update debug with chunk info
+                    const currentContent = document.getElementById('debug-content');
+                    if (currentContent) {
+                        const chunkInfo = `<br>📊 Chunks: ${chunkCount} (${Math.round(totalSize/1024)}KB)`;
+                        if (currentContent.innerHTML.includes('📊')) {
+                            currentContent.innerHTML = currentContent.innerHTML.replace(/📊.*/, chunkInfo);
+                        } else {
+                            currentContent.innerHTML += chunkInfo;
+                        }
+                    }
                 } else {
-                    console.warn('⚠️ Empty audio chunk received');
+                    console.warn('⚠️ Empty chunk received');
                 }
             };
             
@@ -216,30 +322,29 @@ class DoneTalkingRecorder {
             };
             
             this.recorder.onerror = (event) => {
-                console.error('❌ MediaRecorder error:', event.error);
-                this.updateDebugPanel(debugInfo + `<br><br><span style="color: #ff0000">❌ Recording error: ${event.error.message}</span>`);
+                console.error('❌ Recording error:', event.error);
+                this.showNotification(`Recording error: ${event.error.message}`, 'error');
             };
             
-            // Step 6: Start recording
-            this.recorder.start(1000); // Collect chunks every second
+            // Strategy 5: Start recording with frequent data collection
+            console.log('▶️ Starting MediaRecorder...');
+            this.recorder.start(100); // Collect data every 100ms for immediate feedback
             this.isRecording = true;
+            this.startTime = new Date();
             
-            console.log('✅ Recording started successfully');
-            this.updateUI('recording');
-            this.notifyBackground('recordingStarted');
-            this.showNotification('🔴 Recording started! Watch debug panel for audio activity', 'success');
-            
-            // Update debug panel
-            debugInfo += `<br><br>✅ Recording started!<br>
-                📊 Collecting audio chunks every 1 second<br>
-                🎵 Waiting for audio data...`;
+            debugInfo += '▶️ Recording started!<br>';
             this.updateDebugPanel(debugInfo);
             
-            // Step 7: Monitor audio levels (if possible)
-            this.monitorAudioLevels();
+            // UI updates
+            this.updateUI('recording');
+            this.notifyBackground('recordingStarted');
+            this.showNotification('🔴 Recording started! Microphone active', 'success');
             
-            // Step 8: Handle stream end
-            this.stream.getAudioTracks().forEach(track => {
+            // Monitor audio levels
+            this.startAudioMonitoring();
+            
+            // Set up cleanup on track end
+            this.finalStream.getAudioTracks().forEach(track => {
                 track.onended = () => {
                     console.log('🔚 Audio track ended');
                     if (this.isRecording) {
@@ -249,60 +354,70 @@ class DoneTalkingRecorder {
             });
             
         } catch (error) {
-            console.error('❌ Recording failed:', error);
+            console.error('❌ Recording setup failed:', error);
             this.updateDebugPanel(`<span style="color: #ff0000">❌ Recording failed:<br>${error.name}: ${error.message}</span>`);
             this.showNotification(`Recording failed: ${error.message}`, 'error');
+            this.cleanup();
         }
     }
     
-    monitorAudioLevels() {
-        // Try to create audio context to monitor levels
+    startAudioMonitoring() {
+        if (!this.finalStream) return;
+        
         try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaStreamSource(this.stream);
-            const analyser = audioContext.createAnalyser();
+            if (!this.audioContext) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const source = this.audioContext.createMediaStreamSource(this.finalStream);
+            const analyser = this.audioContext.createAnalyser();
             source.connect(analyser);
             
             analyser.fftSize = 256;
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
+            let maxLevel = 0;
             let silentCount = 0;
-            const checkAudioLevel = () => {
+            
+            const checkLevels = () => {
                 if (!this.isRecording) return;
                 
                 analyser.getByteFrequencyData(dataArray);
                 const average = dataArray.reduce((a, b) => a + b) / bufferLength;
+                const level = Math.round(average);
                 
-                if (average < 1) {
+                if (level > maxLevel) maxLevel = level;
+                
+                if (level < 2) {
                     silentCount++;
                 } else {
                     silentCount = 0;
                 }
                 
-                // Show warning if silent for too long
-                if (silentCount > 10) { // 10 seconds of silence
-                    console.warn('⚠️ No audio detected for 10+ seconds');
-                }
-                
                 // Update debug with audio level
                 const currentContent = document.getElementById('debug-content');
-                if (currentContent && this.isRecording) {
-                    const levelIndicator = `<br>🎚️ Audio level: ${Math.round(average)} ${average > 5 ? '🔊' : '🔇'}`;
-                    if (!currentContent.innerHTML.includes('🎚️')) {
-                        currentContent.innerHTML += levelIndicator;
+                if (currentContent) {
+                    const levelInfo = `<br>🎚️ Audio: ${level} (max: ${maxLevel}) ${level > 5 ? '🔊' : '🔇'}`;
+                    if (currentContent.innerHTML.includes('🎚️')) {
+                        currentContent.innerHTML = currentContent.innerHTML.replace(/🎚️.*/, levelInfo);
                     } else {
-                        currentContent.innerHTML = currentContent.innerHTML.replace(/🎚️.*/, levelIndicator);
+                        currentContent.innerHTML += levelInfo;
                     }
                 }
                 
-                setTimeout(checkAudioLevel, 1000);
+                // Warn if too silent
+                if (silentCount > 5) {
+                    console.warn('⚠️ Audio appears silent for 5+ seconds');
+                }
+                
+                setTimeout(checkLevels, 1000);
             };
             
-            checkAudioLevel();
+            checkLevels();
             
         } catch (error) {
-            console.warn('⚠️ Could not create audio monitor:', error);
+            console.warn('⚠️ Audio monitoring failed:', error);
         }
     }
     
@@ -313,8 +428,11 @@ class DoneTalkingRecorder {
             this.isRecording = false;
             this.updateUI('processing');
             
-            // Update debug panel
-            this.updateDebugPanel(document.getElementById('debug-content').innerHTML.replace('🔴 RECORDING', '⏹️ STOPPED'));
+            // Update debug
+            const currentContent = document.getElementById('debug-content');
+            if (currentContent) {
+                currentContent.innerHTML += '<br>⏹️ Recording stopped, processing...';
+            }
         }
     }
     
@@ -323,35 +441,36 @@ class DoneTalkingRecorder {
         
         if (this.audioChunks.length === 0) {
             console.warn('⚠️ No audio data to process');
-            this.updateDebugPanel(document.getElementById('debug-content').innerHTML + `<br><br><span style="color: #ff0000">❌ No audio data recorded!</span>`);
             this.showNotification('No audio data recorded', 'error');
             this.updateUI('ready');
+            this.cleanup();
             return;
         }
         
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-        console.log(`📁 Audio blob size: ${audioBlob.size} bytes`);
+        const audioBlob = new Blob(this.audioChunks, { 
+            type: this.recorder.mimeType || 'audio/webm' 
+        });
         
-        // Update debug panel with final stats
-        let finalDebugInfo = document.getElementById('debug-content').innerHTML;
-        finalDebugInfo += `<br><br>📁 Final Results:<br>
-            └ Total chunks: ${this.audioChunks.length}<br>
-            └ Final blob size: ${audioBlob.size} bytes<br>
-            └ Duration estimate: ~${Math.round(this.audioChunks.length)} seconds`;
+        console.log(`📁 Audio blob: ${audioBlob.size} bytes, type: ${audioBlob.type}`);
         
-        if (audioBlob.size < 1000) {
-            finalDebugInfo += `<br><span style="color: #ff0000">⚠️ File very small - likely no audio!</span>`;
-        } else {
-            finalDebugInfo += `<br><span style="color: #00ff00">✅ Good file size - likely has audio!</span>`;
+        // Update debug with results
+        const duration = this.startTime ? (Date.now() - this.startTime.getTime()) / 1000 : 0;
+        const currentContent = document.getElementById('debug-content');
+        if (currentContent) {
+            currentContent.innerHTML += `<br><br>📁 Results:<br>
+                └ File size: ${Math.round(audioBlob.size/1024)}KB<br>
+                └ Duration: ${Math.round(duration)}s<br>
+                └ Chunks: ${this.audioChunks.length}<br>
+                └ Type: ${audioBlob.type}`;
         }
         
-        this.updateDebugPanel(finalDebugInfo);
-        
-        // Process the audio
+        // Create FormData for upload
         const formData = new FormData();
-        formData.append('audio', audioBlob, `meeting_${Date.now()}.webm`);
+        const filename = `meeting_${Date.now()}.${audioBlob.type.includes('mp4') ? 'm4a' : 'webm'}`;
+        formData.append('audio', audioBlob, filename);
         formData.append('platform', this.detectPlatform());
         formData.append('timestamp', new Date().toISOString());
+        formData.append('duration', duration.toString());
         
         try {
             const response = await fetch(`${this.apiUrl}/api/audio/process`, {
@@ -360,24 +479,58 @@ class DoneTalkingRecorder {
             });
             
             if (response.ok) {
-                this.showNotification('Recording sent to Done-Talking!', 'success');
+                this.showNotification('✅ Recording uploaded successfully!', 'success');
+                console.log('✅ Upload successful');
             } else {
-                throw new Error(`API returned ${response.status}`);
+                throw new Error(`Upload failed: ${response.status}`);
             }
         } catch (error) {
-            console.warn('⚠️ API not available, downloading file:', error);
-            this.downloadAudio(audioBlob);
-            this.showNotification('Recording downloaded for processing', 'success');
+            console.warn('⚠️ Upload failed, downloading locally:', error);
+            this.downloadAudio(audioBlob, filename);
+            this.showNotification('📥 Recording saved locally for manual upload', 'info');
         }
         
         this.updateUI('ready');
         this.notifyBackground('recordingStopped');
-        
-        // Clean up stream
-        if (this.stream) {
-            this.stream.getTracks().forEach(track => track.stop());
-            this.stream = null;
+        this.cleanup();
+    }
+    
+    downloadAudio(audioBlob, filename) {
+        const url = URL.createObjectURL(audioBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        console.log('💾 Audio file downloaded:', filename);
+    }
+    
+    cleanup() {
+        // Clean up streams
+        if (this.micStream) {
+            this.micStream.getTracks().forEach(track => track.stop());
+            this.micStream = null;
         }
+        
+        if (this.systemStream) {
+            this.systemStream.getTracks().forEach(track => track.stop());
+            this.systemStream = null;
+        }
+        
+        if (this.finalStream && this.finalStream !== this.micStream) {
+            this.finalStream.getTracks().forEach(track => track.stop());
+            this.finalStream = null;
+        }
+        
+        // Clean up audio context
+        if (this.audioContext && this.audioContext.state !== 'closed') {
+            this.audioContext.close();
+            this.audioContext = null;
+        }
+        
+        console.log('🧹 Cleanup completed');
     }
     
     detectPlatform() {
@@ -387,18 +540,6 @@ class DoneTalkingRecorder {
         if (hostname.includes('teams.microsoft.com')) return 'teams';
         if (hostname.includes('webex.com')) return 'webex';
         return 'unknown';
-    }
-    
-    downloadAudio(audioBlob) {
-        const url = URL.createObjectURL(audioBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `meeting_${Date.now()}.webm`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        console.log('💾 Audio file downloaded');
     }
     
     updateUI(state) {
@@ -437,6 +578,7 @@ class DoneTalkingRecorder {
             ${type === 'success' ? 'background: rgba(76, 175, 80, 0.95) !important; color: white !important;' : ''}
             ${type === 'error' ? 'background: rgba(244, 67, 54, 0.95) !important; color: white !important;' : ''}
             ${type === 'warning' ? 'background: rgba(255, 193, 7, 0.95) !important; color: #333 !important;' : ''}
+            ${type === 'info' ? 'background: rgba(33, 150, 243, 0.95) !important; color: white !important;' : ''}
         `;
         notification.textContent = message;
         document.body.appendChild(notification);

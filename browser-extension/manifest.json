@@ -23,11 +23,9 @@
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "1": "icons/icon2.png"
   }
-  //,
-  //"icons": {
-    //"16": "icons/icon16.png",
-    //"48": "icons/icon48.png",
-    //"128": "icons/icon128.png"
-  //}
+  
 }
