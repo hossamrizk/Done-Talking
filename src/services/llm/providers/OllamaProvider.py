@@ -6,7 +6,7 @@ from ...BaseService import BaseService
 class OllamaProvider(BaseLLMProvider):
     """Implementation of LLMProvider Using Ollama."""
     def __init__(self, base_service: Optional[BaseService] = None, 
-                 model: Optional[str] = "gemma2:9b", 
+                 model: Optional[str] = "mistral:7b-instruct-q4_0", 
                  temperature: Optional[float] = 0.6):
         super().__init__(base_service, model=model, temperature=temperature)
 

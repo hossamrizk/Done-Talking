@@ -5,8 +5,9 @@ import enum
 import os
 
 class SourceType(enum.Enum):
-    UPLOAD = "upload"
-    URL = "url"
+    UPLOAD = "UPLOAD"
+    URL = "URL"
+    RECORDED = "RECORDED"
     
 class MediaInput(Base):
     __tablename__ = "media_inputs"

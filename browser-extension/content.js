@@ -3,7 +3,8 @@ class DoneTalkingRecorder {
         this.isRecording = false;
         this.recorder = null;
         this.audioChunks = [];
-        this.apiUrl = 'http://localhost:8000';
+        this.apiUrl = 'http://localhost:8000/v2';
+        this.apiKey = "HossamRizk951753";
         this.micStream = null;
         this.systemStream = null;
         this.finalStream = null;
@@ -467,14 +468,17 @@ class DoneTalkingRecorder {
         // Create FormData for upload
         const formData = new FormData();
         const filename = `meeting_${Date.now()}.${audioBlob.type.includes('mp4') ? 'm4a' : 'webm'}`;
-        formData.append('audio', audioBlob, filename);
+        formData.append('audio_file', audioBlob, filename);
         formData.append('platform', this.detectPlatform());
         formData.append('timestamp', new Date().toISOString());
         formData.append('duration', duration.toString());
         
         try {
-            const response = await fetch(`${this.apiUrl}/api/audio/process`, {
+            const response = await fetch(`${this.apiUrl}/receive_meeting`, {
                 method: 'POST',
+                headers: {
+                    'api_key_header': this.apiKey  
+                },
                 body: formData
             });
             
@@ -497,14 +501,29 @@ class DoneTalkingRecorder {
     
     downloadAudio(audioBlob, filename) {
         const url = URL.createObjectURL(audioBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        console.log('💾 Audio file downloaded:', filename);
+
+        // Use Chrome Downloads API to save to custom directory
+        chrome.downloads.download({
+            url: url,
+            filename: `Done-Talking/assets/recorded_meetings/${filename}`,
+            saveAs: false // Auto-save to Downloads/Done-Talking-Recordings/
+        }, (downloadId) => {
+            if (chrome.runtime.lastError) {
+                console.warn('⚠️ Chrome downloads API failed, falling back to default method:', chrome.runtime.lastError);
+                // Fallback to original method
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                console.log('💾 Audio file saved to Done-Talking-Recordings folder:', filename);
+            }
+
+            // Clean up the object URL
+            URL.revokeObjectURL(url);
+        });
     }
     
     cleanup() {

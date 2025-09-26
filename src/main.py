@@ -2,7 +2,9 @@ from fastapi import FastAPI, Depends, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from api import v1_router, get_api_key
+from fastapi.middleware.cors import CORSMiddleware
+from api import v1_router, get_api_key, v2_router
+
 
 app = FastAPI(
     title="Done-Talking",
@@ -11,6 +13,13 @@ app = FastAPI(
     contact={
         "name": "Hossam Eldein Rizk",
         "email": "hossamrizk048@gmail.com"}
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your extension's origin
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*", "HossamRizk951753", "Content-Type"],  # Explicitly allow your custom header
 )
 
 # Mount static files
@@ -21,6 +30,7 @@ templates = Jinja2Templates(directory="templates")
 
 # Include your API router with API key dependency
 app.include_router(v1_router, dependencies=[Depends(get_api_key)])
+app.include_router(v2_router, dependencies=[Depends(get_api_key)])
 
 # Single page application route
 @app.get("/", response_class=HTMLResponse)

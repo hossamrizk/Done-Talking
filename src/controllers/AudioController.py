@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from fastapi.responses import FileResponse
 from typing import Dict, Any, Tuple
 from db import SourceType, insert_into_db
+from pydub import AudioSegment
 import os
 
 class AudioController:
@@ -36,6 +37,15 @@ class AudioController:
     async def process(self, file_path: str, source_type: SourceType) -> FileResponse:
         """Process audio file and return result"""
         try:
+            # Convert audio format to mp3
+            if file_path.endswith(".webm"):
+                print(f"Processing WebM file: {file_path}")
+                audio = AudioSegment.from_file(file_path, format="webm")
+                output_path = file_path.replace(".webm", ".mp3")
+                audio.export(output_path, format="mp3", bitrate="192k")
+                print(f"Converted to: {output_path}")
+                file_path = output_path
+
             # Analyze audio
             csv_path, analysis_data, language = self._analyze_audio(file_path)
             

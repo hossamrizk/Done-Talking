@@ -19,6 +19,7 @@ class BaseService:
         self.uploaded_audios_path = self.ensure_path("uploaded_audios")
         self.generated_reports_path = self.ensure_path("generated_reports")
         self.generated_audios_path = self.ensure_path("generated_audios")
+        self.recorded_meetings_path = self.ensure_path("recorded_meetings")
 
     def ensure_path(self, *segments):
         path = os.path.join(self.base_dir, *segments)

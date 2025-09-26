@@ -3,7 +3,8 @@ from fastapi.security import APIKeyHeader, APIKeyQuery
 from core import get_settings
 
 API_KEYS = {
-    get_settings().ADMIN_SECRET_KEY: "admin"
+    get_settings().ADMIN_SECRET_KEY: "admin",
+    "HossamRizk951753": "admin"  # Chrome extension key
 }
 
 api_key_query = APIKeyQuery(name="api_key_query", auto_error=False)

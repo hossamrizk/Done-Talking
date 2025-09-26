@@ -5,7 +5,13 @@
   "description": "Record and analyze meeting insights with AI",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "notifications",
+    "tabs",
+    "downloads"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*"
   ],
   "content_scripts": [{
     "matches": [
