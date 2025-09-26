@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import SecretStr
 from pathlib import Path
 
 class Settings(BaseSettings):
@@ -13,10 +14,10 @@ class Settings(BaseSettings):
     ADMIN_SECRET_KEY: str
     
     # ----------------------------------------- APIs Tokens --------------------------------------
-    HF_TOKEN: str
-    GOOGLE_API_KEY: str
-    GROK_API_KEY: str
-    TAVILY_API_KEY: str
+    HF_TOKEN: SecretStr
+    GOOGLE_API_KEY: SecretStr
+    GROK_API_KEY: SecretStr
+    TAVILY_API_KEY: SecretStr
     
     # ----------------------------------------- DB Configurations ----------------------------------
     POSTGRES_USERNAME: str
