@@ -1,5 +1,5 @@
 from .AbstractSummary import AbstractSummary
-from ..llm import ArabicPrompt, GoogleProvider
+from ..llm import ArabicPrompt, GoogleProvider, vLLMProvider
 from langchain_core.output_parsers import StrOutputParser
 from .JSONOutputHandler import JSONOutputHandler
 
@@ -8,9 +8,11 @@ class ArabicSummary(AbstractSummary):
         super().__init__()
         arabic_prompt = ArabicPrompt(output_parser=self.parser)
         google_provider = GoogleProvider()
+        #vllm_provider = vLLMProvider()
 
         self.prompt = arabic_prompt.get_prompt_template()
         self.llm = google_provider.get_llm()
+        #self.llm = vllm_provider.get_llm()
         self.json_handler = JSONOutputHandler(base_service=self.base_service)
 
 

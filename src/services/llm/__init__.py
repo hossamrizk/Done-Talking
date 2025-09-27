@@ -1,2 +1,2 @@
 from .prompts import ArabicPrompt, EnglishPrompt
-from .providers import OllamaProvider, GoogleProvider
+from .providers import OllamaProvider, GoogleProvider, vLLMProvider

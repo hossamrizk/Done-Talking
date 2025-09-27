@@ -1,5 +1,5 @@
 from .AbstractSummary import AbstractSummary
-from ..llm import EnglishPrompt, OllamaProvider
+from ..llm import EnglishPrompt, OllamaProvider, vLLMProvider
 from langchain_core.output_parsers import StrOutputParser
 from .JSONOutputHandler import JSONOutputHandler
 
@@ -8,9 +8,11 @@ class EnglishSummary(AbstractSummary):
         super().__init__()
         english_prompt = EnglishPrompt(output_parser=self.parser)
         ollama_provider = OllamaProvider()
+        #vllm_provider = vLLMProvider()
 
         self.prompt = english_prompt.get_prompt_template()
         self.llm = ollama_provider.get_llm()
+        #self.llm = vllm_provider.get_llm()
         self.json_handler = JSONOutputHandler(base_service=self.base_service)
 
     def create_summary(self, text: str):
