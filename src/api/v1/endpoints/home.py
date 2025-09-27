@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from core import get_settings, Settings
+from src.core import get_settings, Settings
 
 home_router = APIRouter()
 

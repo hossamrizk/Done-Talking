@@ -1,6 +1,7 @@
-from .models import MediaInput
-from .session import get_db
-
+#from .models import MediaInput
+#from .session import get_db
+from src.db.models import MediaInput
+from src.db.session import get_db
 def insert_into_db(source_type, source_location, duration, diarization_csv_path, summary_json_path, audio_summary_path):
     db = next(get_db())
     

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..BaseService import BaseService
+from src.services.BaseService import BaseService
 
 class AbstractAudioHandler(ABC):
     def __init__(self):

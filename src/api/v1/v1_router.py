@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import upload_router, download_router, home_router
+from src.api.v1.endpoints import upload_router, download_router, home_router
 
 v1_router = APIRouter(
     prefix="/v1",

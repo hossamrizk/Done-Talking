@@ -1,9 +1,9 @@
 from .BaseLLMProvider import BaseLLMProvider
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.language_models.chat_models import BaseChatModel
-from core import get_settings
+from src.core import get_settings
 from typing import Optional
-from ...BaseService import BaseService
+from src.services.BaseService import BaseService
 
 class GoogleProvider(BaseLLMProvider):
     """Implementation of LLMProvider using Google Gemini"""

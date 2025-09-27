@@ -1,7 +1,7 @@
 from langchain_ollama import OllamaLLM
 from .BaseLLMProvider import BaseLLMProvider
 from typing import Optional
-from ...BaseService import BaseService
+from src.services.BaseService import BaseService
 
 class OllamaProvider(BaseLLMProvider):
     """Implementation of LLMProvider Using Ollama."""

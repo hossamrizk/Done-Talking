@@ -1,5 +1,7 @@
 from .AbstractSummary import AbstractSummary
-from ..llm import EnglishPrompt, OllamaProvider, vLLMProvider
+from src.services.llm.providers.OllamaProvider import OllamaProvider
+from src.services.llm.providers.vLLMProvider import vLLMProvider
+from src.services.llm.prompts.EnglishPrompt import EnglishPrompt
 from langchain_core.output_parsers import StrOutputParser
 from .JSONOutputHandler import JSONOutputHandler
 

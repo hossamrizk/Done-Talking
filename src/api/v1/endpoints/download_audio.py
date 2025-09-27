@@ -1,6 +1,6 @@
-from controllers import DownloadController, AudioController
-from db import SourceType
-from schemas import DownloadRequest
+from src.controllers import DownloadController, AudioController
+from src.db import SourceType
+from src.schemas import DownloadRequest
 from fastapi import HTTPException, APIRouter
 
 

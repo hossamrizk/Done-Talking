@@ -1,4 +1,4 @@
-from ...BaseService import BaseService
+from src.services.BaseService import BaseService
 from .BaseLLMProvider import BaseLLMProvider
 from langchain_openai import ChatOpenAI
 from typing import Optional

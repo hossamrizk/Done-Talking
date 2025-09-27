@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from db import SourceType
-from controllers import RecordedController, AudioController
+from src.db import SourceType
+from src.controllers import RecordedController, AudioController
 
 
 accept_audio_router = APIRouter()

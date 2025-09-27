@@ -8,12 +8,12 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 # Import Base first
-from db.base import Base
+from src.db.base import Base
 
-from core import get_settings
+from src.core import get_settings
 settings = get_settings()
 # Import all your models here - this is crucial for autogenerate to work
-from db.models import MediaInput
+#from db.models import MediaInput
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -45,7 +45,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = f"{settings.DB_DRIVER}://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DATABASE_NAME}"
+    url = f"{settings.DB_DRIVER}://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
 
     #url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -61,7 +61,7 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
-    url = f"{settings.DB_DRIVER}://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DATABASE_NAME}"
+    url = f"{settings.DB_DRIVER}://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
     
     connectable = create_engine(url, poolclass=pool.NullPool)
 

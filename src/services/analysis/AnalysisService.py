@@ -1,8 +1,9 @@
-from ..BaseService import BaseService
-from .DataLoader import DataLoader
-from .SpeakerAnalyzer import SpeakerAnalyzer
-from .TextAnalyzer import TextAnalyzer
-from .stopwords import ArabicStopWords, EnglishStopWords
+from src.services.BaseService import BaseService
+from src.services.analysis.DataLoader import DataLoader
+from src.services.analysis.SpeakerAnalyzer import SpeakerAnalyzer
+from src.services.analysis.TextAnalyzer import TextAnalyzer
+from src.services.analysis.stopwords.ArabicStopWords import ArabicStopWords
+from src.services.analysis.stopwords.EnglishStopWords import EnglishStopWords
 from langdetect import detect
 
 class AnalysisService(BaseService):

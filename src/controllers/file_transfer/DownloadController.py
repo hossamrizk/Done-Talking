@@ -1,7 +1,7 @@
 from .AbstractHandler import AbstractHandler
-from services import DownloadAudio, BaseService
+from src.services.BaseService import BaseService
+from src.services.file_transfer.DownloadAudio import DownloadAudio
 from fastapi import HTTPException
-from schemas import DownloadRequest
 
 class DownloadController(AbstractHandler):
     def __init__(self):
@@ -18,7 +18,6 @@ class DownloadController(AbstractHandler):
         :return: Path to the downloaded audio file.
         """
         try:
-            #video_url = DownloadRequest.video_url
             full_result = self.download_service.handle(video_url = video_url)
             file_path = full_result.get("file_path")
             self.logger.info(f"File downloaded successfully and saved at: {file_path}")

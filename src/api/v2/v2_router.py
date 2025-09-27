@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import accept_audio_router
+from src.api.v2.endpoints import accept_audio_router
 
 v2_router = APIRouter(
     prefix="/v2",

@@ -1,4 +1,4 @@
-from core import get_settings
+from src.core import get_settings
 import logging
 import os
 

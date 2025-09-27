@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from langchain_core.language_models.llms import BaseLLM
 from typing import Optional
-from ...BaseService import BaseService
+from src.services.BaseService import BaseService
 
 
 class BaseLLMProvider(ABC):

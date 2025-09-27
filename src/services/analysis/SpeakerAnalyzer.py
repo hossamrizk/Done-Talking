@@ -1,4 +1,4 @@
-from ..BaseService import BaseService
+from src.services.BaseService import BaseService
 from typing import List, Dict
 import pandas as pd 
 from langdetect import detect

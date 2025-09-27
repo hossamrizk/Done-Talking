@@ -1,4 +1,5 @@
-from ..base import Base
+#from ..base import Base
+from src.db.base import Base
 from sqlalchemy import Column, Integer, Enum, Float, DateTime, String
 from datetime import datetime
 import enum

@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Security
 from fastapi.security import APIKeyHeader, APIKeyQuery
-from core import get_settings
+from src.core import get_settings
 
 API_KEYS = {
     get_settings().ADMIN_SECRET_KEY: "admin",

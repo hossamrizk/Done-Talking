@@ -1,5 +1,5 @@
-from controllers import UploadController, AudioController
-from db import SourceType
+from src.controllers import UploadController, AudioController
+from src.db import SourceType
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
 

@@ -1,9 +1,11 @@
 from .language_processor import EnglishController, ArabicController
-from services import AudioDiarization, AnalysisService
+#from services import AudioDiarization, AnalysisService
+from src.services.diarization.AudioDiarization import AudioDiarization
+from src.services.analysis.AnalysisService import AnalysisService
+from src.db import SourceType, insert_into_db
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
 from typing import Dict, Any, Tuple
-from db import SourceType, insert_into_db
 from pydub import AudioSegment
 import os
 

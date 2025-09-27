@@ -3,8 +3,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from api import v1_router, get_api_key, v2_router
-
+#from api import v1_router, get_api_key, v2_router
+from src.api.v1 import v1_router
+from src.api.v2 import v2_router
+from src.api.security import get_api_key
 
 app = FastAPI(
     title="Done-Talking",
@@ -23,7 +25,7 @@ app.add_middleware(
 )
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="/home/hussam/Done-Talking/src/templates/static"), name="static")
+app.mount("/static", StaticFiles(directory="templates/static"), name="static")
 
 # Setup templates
 templates = Jinja2Templates(directory="templates")

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from ..BaseService import BaseService
-from helpers import unique_file_name
+from src.services.BaseService import BaseService
+from src.helpers import unique_file_name
 from pathlib import Path
 import os
 

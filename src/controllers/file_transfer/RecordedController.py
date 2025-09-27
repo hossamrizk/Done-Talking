@@ -1,7 +1,8 @@
 from fastapi.responses import JSONResponse
 from fastapi import File, UploadFile, Form
 from .AbstractHandler import AbstractHandler
-from services import BaseService
+#from services import BaseService
+from src.services.BaseService import BaseService
 import shutil
 import os
 

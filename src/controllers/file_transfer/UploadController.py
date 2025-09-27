@@ -1,6 +1,8 @@
 from .AbstractHandler import AbstractHandler
 from fastapi import UploadFile, HTTPException
-from services import UploadAudio, BaseService
+#from services import UploadAudio, BaseService
+from src.services.BaseService import BaseService
+from src.services.file_transfer.UploadAudio import UploadAudio
 
 class UploadController(AbstractHandler):
     """

@@ -1,4 +1,4 @@
-from ..BaseService import BaseService
+from src.services.BaseService import BaseService
 from collections import Counter, defaultdict
 from typing import List, Dict, Tuple
 import re

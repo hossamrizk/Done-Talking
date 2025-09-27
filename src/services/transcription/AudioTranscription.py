@@ -1,4 +1,4 @@
-from ..BaseService import BaseService
+from src.services.BaseService import BaseService
 from pydub import AudioSegment
 import tempfile
 import whisper

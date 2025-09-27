@@ -1,7 +1,11 @@
 from .AbstractLanguage import AbstractLanguage
-from services import EnglishSummary, EnglishFormatter, EnglishConverter, BaseService
+#from services import EnglishSummary, EnglishFormatter, EnglishConverter, BaseService
+from src.services.BaseService import BaseService
+from src.services.summarization.EnglishSummary import EnglishSummary
+from src.services.formatters.EnglishFormatter import EnglishFormatter
+from src.services.text_to_speech.EnglishConverter import EnglishConverter
+from src.helpers import load_csv, load_json
 from typing import Tuple, Dict, Any
-from helpers import load_csv, load_json
 from fastapi import HTTPException
 import os
 

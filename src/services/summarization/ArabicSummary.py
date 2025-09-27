@@ -1,5 +1,7 @@
 from .AbstractSummary import AbstractSummary
-from ..llm import ArabicPrompt, GoogleProvider, vLLMProvider
+from src.services.llm.providers.GoogleProvider import GoogleProvider
+from src.services.llm.providers.vLLMProvider import vLLMProvider
+from src.services.llm.prompts.ArabicPrompt import ArabicPrompt
 from langchain_core.output_parsers import StrOutputParser
 from .JSONOutputHandler import JSONOutputHandler
 

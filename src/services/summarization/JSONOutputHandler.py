@@ -1,5 +1,5 @@
-from services.BaseService import BaseService
-from helpers import unique_file_name
+from src.services.BaseService import BaseService
+from src.helpers import unique_file_name
 import json
 import os
 

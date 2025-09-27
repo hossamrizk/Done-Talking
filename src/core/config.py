@@ -20,11 +20,11 @@ class Settings(BaseSettings):
     TAVILY_API_KEY: SecretStr
     
     # ----------------------------------------- DB Configurations ----------------------------------
-    POSTGRES_USERNAME: str
+    POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
-    POSTGRES_DATABASE_NAME: str
+    POSTGRES_DB: str
     DB_DRIVER: str
     
     class Config:

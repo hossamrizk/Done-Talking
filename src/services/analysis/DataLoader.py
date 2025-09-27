@@ -1,4 +1,4 @@
-from ..BaseService import BaseService
+from src.services.BaseService import BaseService
 import pandas as pd
 
 class DataLoader(BaseService):

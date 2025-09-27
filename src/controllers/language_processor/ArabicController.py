@@ -1,7 +1,11 @@
 from .AbstractLanguage import AbstractLanguage
-from services import BaseService, ArabicSummary, ArabicFormatter, ArabicConverter
+#from services import BaseService, ArabicSummary, ArabicFormatter, ArabicConverter
+from src.services.BaseService import BaseService
+from src.services.summarization.ArabicSummary import ArabicSummary
+from src.services.formatters.ArabicFormatter import ArabicFormatter
+from src.services.text_to_speech.ArabicConverter import ArabicConverter
+from src.helpers import load_csv, load_json
 from typing import Dict, Any, Tuple
-from helpers import load_csv, load_json
 from fastapi import HTTPException
 import os
 
