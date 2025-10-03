@@ -16,20 +16,21 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #e2e8f0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 100%);
             min-height: 100vh;
         }
 
         /* Navigation */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .nav-content {
@@ -46,7 +47,7 @@
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
-            color: #333;
+            color: #f1f5f9;
             font-weight: bold;
             font-size: 1.2rem;
         }
@@ -54,7 +55,7 @@
         .nav-icon {
             width: 24px;
             height: 24px;
-            color: #667eea;
+            color: #3b82f6;
         }
 
         .nav-links {
@@ -67,7 +68,7 @@
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
-            color: #666;
+            color: #94a3b8;
             padding: 0.5rem 1rem;
             border-radius: 6px;
             transition: all 0.3s ease;
@@ -76,8 +77,8 @@
 
         .nav-link:hover,
         .nav-link.active {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
         }
 
         .nav-link-icon {
@@ -108,14 +109,14 @@
         .hero-title {
             font-size: 3rem;
             font-weight: bold;
-            color: white;
+            color: #f1f5f9;
             margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .hero-description {
             font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: #cbd5e1;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -123,14 +124,14 @@
         .page-title {
             font-size: 2.5rem;
             font-weight: bold;
-            color: white;
+            color: #f1f5f9;
             margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .page-description {
             font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: #cbd5e1;
             margin-bottom: 2rem;
         }
 
@@ -143,29 +144,32 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         .card-icon-wrapper {
             width: 64px;
             height: 64px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         .card-icon {
@@ -178,11 +182,11 @@
             font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            color: #333;
+            color: #f1f5f9;
         }
 
         .card-description {
-            color: #666;
+            color: #94a3b8;
             margin-bottom: 1.5rem;
         }
 
@@ -193,11 +197,12 @@
         }
 
         .form-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
             border-radius: 12px;
             padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .form-group {
@@ -208,7 +213,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #333;
+            color: #f1f5f9;
         }
 
         .input-wrapper {
@@ -222,44 +227,48 @@
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            color: #666;
+            color: #94a3b8;
         }
 
         .form-input {
             width: 100%;
             padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-            border: 2px solid #e1e5e9;
+            border: 2px solid #374151;
             border-radius: 6px;
             font-size: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            color: #f1f5f9;
             transition: border-color 0.3s ease;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .form-help {
             margin-top: 0.5rem;
             font-size: 0.875rem;
-            color: #666;
+            color: #94a3b8;
         }
 
         /* Upload Area */
         .upload-area {
-            border: 2px dashed #e1e5e9;
+            border: 2px dashed #374151;
             border-radius: 8px;
             padding: 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            background: rgba(15, 23, 42, 0.3);
         }
 
         .upload-area:hover,
         .upload-area.dragover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .file-input {
@@ -277,19 +286,19 @@
         .upload-icon {
             width: 48px;
             height: 48px;
-            color: #667eea;
+            color: #3b82f6;
             margin: 0 auto 1rem;
         }
 
         .upload-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #333;
+            color: #f1f5f9;
             margin-bottom: 0.5rem;
         }
 
         .upload-description {
-            color: #666;
+            color: #94a3b8;
             font-size: 0.9rem;
         }
 
@@ -310,13 +319,15 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, #2563eb, #1e40af);
         }
 
         .btn-primary:disabled {
@@ -333,9 +344,11 @@
         .result-container {
             margin-top: 2rem;
             padding: 1.5rem;
-            background: rgba(248, 249, 250, 0.95);
+            background: rgba(30, 41, 59, 0.8);
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #3b82f6;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .result-item {
@@ -344,7 +357,7 @@
 
         .result-item h4 {
             margin-bottom: 0.5rem;
-            color: #2c3e50;
+            color: #f1f5f9;
             font-size: 1.1rem;
         }
 
@@ -354,14 +367,16 @@
 
         .result-item li {
             margin-bottom: 0.5rem;
+            color: #cbd5e1;
         }
 
         .error-message {
-            color: #e74c3c;
+            color: #fca5a5;
             padding: 1rem;
-            background: rgba(253, 232, 232, 0.95);
+            background: rgba(127, 29, 29, 0.3);
             border-radius: 6px;
-            border: 1px solid rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         /* API Status */
@@ -369,26 +384,28 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
             padding: 0.75rem 1rem;
             border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             font-size: 0.875rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             z-index: 1000;
+            color: #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .api-status.success {
-            color: #28a745;
-            border-color: rgba(40, 167, 69, 0.2);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.3);
         }
 
         .api-status.error {
-            color: #dc3545;
-            border-color: rgba(220, 53, 69, 0.2);
+            color: #fca5a5;
+            border-color: rgba(248, 113, 113, 0.3);
         }
 
         .text-success {

@@ -1,27 +1,27 @@
-/* CSS Variables - Dark Calm Theme */
+/* CSS Variables - Dark Intelligence Theme */
 :root {
-  /* Colors based on your tailwind config */
-  --calm-50: #F0F7FF;
-  --calm-100: #E3F2FD;
-  --calm-200: #BBDEFB;
-  --calm-300: #90CAF9;
-  --calm-400: #64B5F6;
-  --calm-500: #42A5F5;
-  --calm-600: #2196F3;
-  --calm-700: #1E88E5;
-  --calm-800: #1565C0;
-  --calm-900: #0D47A1;
+  /* Colors for dark intelligent theme */
+  --calm-50: #f8fafc;
+  --calm-100: #f1f5f9;
+  --calm-200: #e2e8f0;
+  --calm-300: #cbd5e1;
+  --calm-400: #94a3b8;
+  --calm-500: #64748b;
+  --calm-600: #3b82f6;
+  --calm-700: #2563eb;
+  --calm-800: #1d4ed8;
+  --calm-900: #1e40af;
   
-  --dark-50: #EAECF1;
-  --dark-100: #D5D9E3;
-  --dark-200: #ABB3C7;
-  --dark-300: #808EAB;
-  --dark-400: #56688F;
-  --dark-500: #3A496E;
-  --dark-600: #2D394F;
-  --dark-700: #1F2A3E;
-  --dark-800: #121B2D;
-  --dark-900: #0A101C;
+  --dark-50: #f8fafc;
+  --dark-100: #f1f5f9;
+  --dark-200: #e2e8f0;
+  --dark-300: #cbd5e1;
+  --dark-400: #94a3b8;
+  --dark-500: #64748b;
+  --dark-600: #475569;
+  --dark-700: #334155;
+  --dark-800: #1e293b;
+  --dark-900: #0f172a;
   
   /* Success/Error colors */
   --success-50: #f0fdf4;
@@ -44,8 +44,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
-  color: var(--calm-800);
-  background: linear-gradient(135deg, var(--calm-50) 0%, var(--calm-100) 100%);
+  color: var(--dark-100);
+  background: linear-gradient(135deg, var(--dark-900) 0%, var(--dark-800) 25%, var(--dark-700) 100%);
   min-height: 100vh;
 }
 
@@ -53,9 +53,10 @@ body {
 .navbar {
   width: 100%;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--calm-100);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .nav-content {
