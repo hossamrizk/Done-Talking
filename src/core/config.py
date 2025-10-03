@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     APP_VERSION: str
     
     # ----------------------------------------- APP Security -------------------------------------
-    ADMIN_SECRET_KEY: str
+    API_TOKEN: SecretStr
     
     # ----------------------------------------- APIs Tokens --------------------------------------
     HF_TOKEN: SecretStr

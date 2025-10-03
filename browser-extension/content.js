@@ -4,7 +4,7 @@ class DoneTalkingRecorder {
         this.recorder = null;
         this.audioChunks = [];
         this.apiUrl = 'http://localhost:8000/v2';
-        this.apiKey = "HossamRizk951753";
+        this.apiKey = null;
         this.micStream = null;
         this.systemStream = null;
         this.finalStream = null;
@@ -14,11 +14,23 @@ class DoneTalkingRecorder {
         this.init();
     }
     
-    init() {
+    async init() {
         console.log('🚀 Done-Talking Extension loaded');
+        await this.loadApiKey(); // Load token from storage
         this.createUI();
         this.createDebugPanel();
         this.setupMessageListener();
+    }
+    
+    async loadApiKey() {
+        // Load API key from Chrome storage
+        return new Promise((resolve) => {
+            chrome.storage.sync.get(['apiToken'], (result) => {
+                this.apiKey = result.apiToken || 'YOUR_DEFAULT_TOKEN'; // Fallback
+                console.log('API token loaded');
+                resolve();
+            });
+        });
     }
     
     createUI() {
@@ -477,7 +489,7 @@ class DoneTalkingRecorder {
             const response = await fetch(`${this.apiUrl}/receive_meeting`, {
                 method: 'POST',
                 headers: {
-                    'api_key_header': this.apiKey  
+                    'Authorization': `Bearer ${this.apiKey}`  
                 },
                 body: formData
             });

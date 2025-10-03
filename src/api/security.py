@@ -1,28 +1,21 @@
 from fastapi import HTTPException, Security
-from fastapi.security import APIKeyHeader, APIKeyQuery
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from src.core import get_settings
 
-API_KEYS = {
-    get_settings().ADMIN_SECRET_KEY: "admin",
-    "HossamRizk951753": "admin"  # Chrome extension key
-}
+security = HTTPBearer()
 
-api_key_query = APIKeyQuery(name="api_key_query", auto_error=False)
-api_key_header = APIKeyHeader(name="api_key_header", auto_error=False)
+token = get_settings().API_TOKEN.get_secret_value()
+
 
 async def get_api_key(
-    api_key_query: str = Security(api_key_query),
-    api_key_header: str = Security(api_key_header)
+    credentials: HTTPAuthorizationCredentials = Security(security)
 ):
     """
     Retrieve the API key from query or header.
     """
-    if api_key_query in API_KEYS:
-        return API_KEYS[api_key_query]
-    elif api_key_header in API_KEYS:
-        return API_KEYS[api_key_header]
-    else:
+    if credentials.credentials != token:
         raise HTTPException(
             status_code=403,
-            detail="Unauthorized access. Check your API key and try again."
+            detail="Unauthorized access. Invalid token."
         )
+    return credentials.credentials

@@ -16,14 +16,12 @@ async def process_audio(
 ):
     
     try:
-        # Call the controller method to handle the audio file and metadata
         file_result = recorded_controller.get_file_path(
             audio_file=audio_file,
             platform=platform,
             timestamp=timestamp
         )
 
-        # Check if it returned a JSONResponse (error case)
         if isinstance(file_result, JSONResponse):
             return file_result
 
