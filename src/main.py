@@ -18,23 +18,19 @@ app = FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or specify your extension's origin
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*", "HossamRizk951753", "Content-Type"],  # Explicitly allow your custom header
+    allow_headers=["*", "HossamRizk951753", "Content-Type"], 
 )
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="templates/static"), name="static")
+app.mount("/static", StaticFiles(directory="src/templates/static"), name="static")
 
-# Setup templates
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/templates")
 
-# Include your API router with API key dependency
 app.include_router(v1_router, dependencies=[Depends(get_api_key)])
 app.include_router(v2_router, dependencies=[Depends(get_api_key)])
 
-# Single page application route
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):
     return templates.TemplateResponse("podcast-demo.html", {"request": request})
