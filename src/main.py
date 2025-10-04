@@ -40,22 +40,22 @@ app.include_router(v2_router, dependencies=[Depends(get_api_key)])
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request, app_settings: Settings = Depends(get_settings)):
-    return templates.TemplateResponse("podcast-demo.html", {
+    return templates.TemplateResponse("Done-Talking.html", {
         "request": request,
         "api_token": app_settings.API_TOKEN.get_secret_value()
     })
 
-# Redirect old routes to main page
+
 @app.get("/upload", response_class=HTMLResponse)
 async def redirect_upload(request: Request, app_settings: Settings = Depends(get_settings)):
-    return templates.TemplateResponse("podcast-demo.html", {
+    return templates.TemplateResponse("Done-Talking.html", {
         "request": request,
         "api_token": app_settings.API_TOKEN.get_secret_value()
     })
 
 @app.get("/download", response_class=HTMLResponse)
 async def redirect_download(request: Request, app_settings: Settings = Depends(get_settings)):
-    return templates.TemplateResponse("podcast-demo.html", {
+    return templates.TemplateResponse("Done-Talking.html", {
         "request": request,
-        "api_token": app_settings.API_TOKEN.get_secret_value().get_secret_value()
+        "api_token": app_settings.API_TOKEN.get_secret_value()
     })

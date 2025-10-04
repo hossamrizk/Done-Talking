@@ -16,8 +16,6 @@ class Settings(BaseSettings):
     # ----------------------------------------- APIs Tokens --------------------------------------
     HF_TOKEN: SecretStr
     GOOGLE_API_KEY: SecretStr
-    GROK_API_KEY: SecretStr
-    TAVILY_API_KEY: SecretStr
     
     # ----------------------------------------- DB Configurations ----------------------------------
     POSTGRES_USER: str
