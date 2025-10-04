@@ -3,11 +3,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 from src.api.v1 import v1_router
 from src.api.v2 import v2_router
 from src.api.security import get_api_key
 from src.core import Settings, get_settings
-
+from src.middleware.rate_limit import limiter
 
 app = FastAPI(
     title="Done-Talking",
@@ -18,7 +20,8 @@ app = FastAPI(
         "email": "hossamrizk048@gmail.com"}
 )
 
-
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

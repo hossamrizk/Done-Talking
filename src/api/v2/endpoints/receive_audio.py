@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from src.db import SourceType
 from src.controllers import RecordedController, AudioController
+from src.db import SourceType
+from src.middleware.rate_limit import RateLimits, limiter
+
 
 
 accept_audio_router = APIRouter()
@@ -9,6 +11,7 @@ recorded_controller = RecordedController()
 audio_processor = AudioController()
 
 @accept_audio_router.post("/receive_meeting")
+@limiter.limit(RateLimits.UPLOAD)
 async def process_audio(
     audio_file: UploadFile = File(...),
     platform: str = Form(...),

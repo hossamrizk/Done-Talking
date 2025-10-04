@@ -1,7 +1,8 @@
+from fastapi import HTTPException, APIRouter
 from src.controllers import DownloadController, AudioController
+from src.middleware.rate_limit import RateLimits, limiter
 from src.db import SourceType
 from src.schemas import DownloadRequest
-from fastapi import HTTPException, APIRouter
 
 
 download_handler = DownloadController()
@@ -10,7 +11,8 @@ audio_processor = AudioController()
 
 download_router = APIRouter()
 @download_router.post("/download_audio")
-async def upload_audio(request: DownloadRequest):
+@limiter.limit(RateLimits.DOWNLOAD)
+async def download_audio(request: DownloadRequest):
     """Download and process audio file"""
     try:
         video_url = request.video_url
@@ -19,5 +21,5 @@ async def upload_audio(request: DownloadRequest):
     except HTTPException:
         raise
     except Exception as e:
-        print(f"Upload error: {str(e)}")
+        print(f"Download error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Download failed: {str(e)}")
