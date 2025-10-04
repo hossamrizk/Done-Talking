@@ -7,3 +7,4 @@ class RateLimits:
     UPLOAD = "10/hour"
     DOWNLOAD = "20/hour"
     HOME = "100/minute"
+    ACCEPT = "30/hour"

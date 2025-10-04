@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from src.controllers import UploadController, AudioController
 from src.middleware.rate_limit import RateLimits, limiter
 from src.db import SourceType
@@ -11,7 +11,7 @@ audio_processor = AudioController()
 upload_router = APIRouter()
 @upload_router.post("/upload_audio")
 @limiter.limit(RateLimits.UPLOAD)
-async def upload_audio(audio: UploadFile = File(...)):
+async def upload_audio(request: Request, audio: UploadFile = File(...)):
     """Upload and process audio file"""
     try:
         file_path = upload_handler.get_file_path(audio)
