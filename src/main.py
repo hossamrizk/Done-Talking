@@ -8,6 +8,7 @@ from src.api.v2 import v2_router
 from src.api.security import get_api_key
 from src.core import Settings, get_settings
 
+
 app = FastAPI(
     title="Done-Talking",
     description="Done-Talking is a local-first, privacy-friendly pipeline that takes long, messy audio—whether from uploaded files or video links—and delivers clean, human-readable summaries and key insights.",
@@ -16,6 +17,9 @@ app = FastAPI(
         "name": "Hossam Eldein Rizk",
         "email": "hossamrizk048@gmail.com"}
 )
+
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  

@@ -13,7 +13,7 @@ class OllamaProvider(BaseLLMProvider):
     def get_llm(self) -> OllamaLLM:
         try:
             self.logger.info(f"Successfully load ollama model {self.model} with temperature {self.temperature}")
-            return OllamaLLM(model=self.model, temperature=self.temperature)
+            return OllamaLLM(model=self.model, temperature=self.temperature, base_url="http://ollama:11434")
         except Exception as e:
             self.logger.exception(f"Error during loading ollama model {e}")
             raise

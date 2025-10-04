@@ -12,7 +12,7 @@ class DownloadAudio(AbstractAudioHandler):
     def handle(self, video_url: str) -> dict:
         try:
             ydl_opts = {
-                'cookiesfrombrowser': ('chrome',),
+                #'cookiesfrombrowser': ('chrome',),
                 'format': 'bestaudio/best',
                 'outtmpl': str(self.download_dir / '%(title)s.%(ext)s'),
                 'postprocessors': [{

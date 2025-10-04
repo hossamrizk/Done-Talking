@@ -14,6 +14,21 @@ services:
       timeout: 5s
       retries: 5
 
+  ollama:
+    image: ollama/ollama:latest
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
   app:
     build:
       context: ..
@@ -22,6 +37,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      ollama:
+        condition: service_started
     env_file:
       - ../.env
     command: bash -c "sleep 10 && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
@@ -36,6 +53,9 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
 
 volumes:
   postgres_data:
+  ollama_data:
