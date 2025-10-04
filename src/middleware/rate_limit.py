@@ -6,5 +6,4 @@ limiter = Limiter(key_func=get_remote_address)
 class RateLimits:
     UPLOAD = "10/hour"
     DOWNLOAD = "20/hour"
-    PROCESS = "30/hour"
     HOME = "100/minute"
