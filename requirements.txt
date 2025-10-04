@@ -9,7 +9,7 @@ Arabic-Stopwords==0.4.3
 nltk==3.9.1
 pyannote.audio==3.3.2
 path==17.1.0
-openai-whisper==20250625
+openai-whisper==20231117
 yt-dlp==2025.6.30
 langchain-core>=0.3.76
 matplotlib==3.10.6
