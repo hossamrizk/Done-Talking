@@ -11,16 +11,13 @@ class ArabicFormatter(AbstractFormatter):
     def format_summary(self, data: dict) -> str:
         formatted = {}
 
-        # أكثر المتحدثين
         speakers = data.get("أكثر المتحدثيين هم", [])
         formatted["أكثر المتحدثين هم"] = f": {', '.join(speakers)}."
 
-        # إجمالي وقت التحدث
         durations = data.get("اجمالى وقت التحدث", {})
         formatted_duration = ", ".join([f"{s}: {t} ثانية" for s, t in durations.items()])
         formatted["اجمالى وقت التحدث لجميع المتحدثين هو"] = f": {formatted_duration}."
 
-        # أكثر الكلمات استخدامًا
         most_used = data.get("أكثر الكلمات استخدامآ", ())
         if most_used and isinstance(most_used, tuple):
             word, count, speaker_count = most_used

@@ -10,12 +10,10 @@ class EnglishFormatter(AbstractFormatter):
         return int(speaker_id.split("_")[-1])
 
     def format_summary(self, data: dict) -> str:
-        # Most talked speakers
         talked = data.get("most_talked_speakers", [])
         most_talked = ", ".join(f"SPEAKER {self._extract_number(s)}" for s in talked)
         sentence1 = f"The most talked speakers are {most_talked}."
 
-        # Total durations
         durations = data.get("total_duration", {})
         duration_parts = [
             f"for speaker number {self._extract_number(s)} spoke for {d} seconds"
